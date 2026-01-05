@@ -1,0 +1,44 @@
+{
+  "name": "legacy-automation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "clean:allure": "cross-env rimraf ./allure/allure-results-${ENV:-dev} ./allure/allure-report-${ENV:-dev}",
+    "test:dev": "cross-env ENV=dev npm run clean:allure && cross-env ENV=dev npx playwright test",
+    "test:al_uat": "cross-env ENV=al_uat npm run clean:allure && cross-env ENV=al_uat npx playwright test",
+    "test:il_uat": "cross-env ENV=il_uat npm run clean:allure && cross-env ENV=il_uat npx playwright test",
+    "test:montana_uat": "cross-env ENV=montana_uat npm run clean:allure && cross-env ENV=montana_uat npx playwright test",
+    "test:mtqip_uat": "cross-env ENV=mtqip_uat npm run clean:allure && cross-env ENV=mtqip_uat npx playwright test",
+    "test:nots_uat": "cross-env ENV=nots_uat npm run clean:allure && cross-env ENV=nots_uat npx playwright test",
+    "test:dev:report": "cross-env ENV=dev npm-run-all --continue-on-error clean:allure test:dev allure:report",
+    "test:il_uat:report": "npx cross-env ENV=il_uat npm-run-all --continue-on-error clean:allure test:il_uat allure:report",
+    "test:al_uat:report": "cross-env ENV=al_uat npm-run-all --continue-on-error clean:allure test:al_uat allure:report",
+    "test:montana_uat:report": "cross-env ENV=montana_uat npm-run-all --continue-on-error clean:allure test:montana_uat allure:report",
+    "test:mtqip_uat:report": "cross-env ENV=mtqip_uat npm-run-all --continue-on-error clean:allure test:mtqip_uat allure:report",
+    "test:nots_uat:report": "cross-env ENV=nots_uat npm-run-all --continue-on-error clean:allure test:nots_uat allure:report",
+    "allure:generate": "cross-env npx allure generate ./allure/allure-results-${ENV:-dev} --clean -o ./allure/allure-report-${ENV:-dev}",
+    "allure:open": "cross-env npx allure open ./allure/allure-report-${ENV:-dev}",
+    "allure:report": "npm run allure:generate && npm run allure:open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@playwright/test": "^1.56.1",
+    "@types/axios": "^0.9.36",
+    "@types/jest": "^30.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.9.2",
+    "allure-commandline": "^2.34.1",
+    "allure-playwright": "^3.4.2",
+    "cross-env": "^10.1.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^6.1.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "axios": "^1.13.2"
+  }
+}
