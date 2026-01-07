@@ -12,11 +12,11 @@ import { ComorbiditiesData } from '../dataFactory/trauma/diagnosis/comorbidities
 import { ArrivalData } from '../dataFactory/trauma/edResus/arrivalData';
 import { InitialAssessmentData } from '../dataFactory/trauma/edResus/initialAssessmentData';
 import { LabsToxicologyData } from '../dataFactory/trauma/edResus/labsToxicologyData';
-import { InjurycodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
+import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
 import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locationServiceData';
 
 const fullRecordCreation_LastName = "Test create record 1"
-test.describe.skip('Create record', () => {
+test.describe('Create record', () => {
   test('Full record creation', async ({ registriesPageAction, demographicPageAction, injuryPageAction,
     prehospitalPageAction, referringFacilityPageAction, diagnosisPageAction, outcomePageAction, edResusPageAction, patientTrackingPageAction }, testInfo) => {
     //testrail
@@ -35,7 +35,7 @@ test.describe.skip('Create record', () => {
     const vitalsData = InitialAssessmentData.getVitalsData();
     const alcoholData = LabsToxicologyData.getAlcoholData();
     const preArrivalCardiacArrest = ComorbiditiesData.getComorbiditiesData().preArrivalCardiacArrest;
-    const injuryCodingData = InjurycodingData.getInjuryCodingData();
+    const injuryCodingData = InjuryCodingData.getInjuryCodingData();
     const dischargeInformation = InitialDischargeData.getDischargeInformationData(patientArrivalDetails.edDepartureOrderDate);
     const billingData = BillingData.getBillingInfoData();
     const locationServiceData = LocationServiceData.getLocationServiceData();
@@ -107,4 +107,3 @@ test.describe.skip('Create record', () => {
     });
   });
 });
-

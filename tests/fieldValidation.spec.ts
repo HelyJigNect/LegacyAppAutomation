@@ -12,13 +12,12 @@ import { ComorbiditiesData } from '../dataFactory/trauma/diagnosis/comorbidities
 import { ArrivalData } from '../dataFactory/trauma/edResus/arrivalData';
 import { InitialAssessmentData } from '../dataFactory/trauma/edResus/initialAssessmentData';
 import { LabsToxicologyData } from '../dataFactory/trauma/edResus/labsToxicologyData';
-import { InjurycodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
+import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
 import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locationServiceData';
 
 const checkFieldValidation_LastName = "Field validation"
 test.describe('Field validation', () => {
-  test.only('Check field validation', async ({registriesPage, referringFacilityPage, registriesPageAction, demographicPageAction, injuryPageAction, prehospitalPageAction, referringFacilityPageAction, edResusPageAction, diagnosisPageAction, outcomePageAction, patientTrackingPageAction}, testInfo) => 
-  {
+  test('Check field validation', async ({ registriesPage, referringFacilityPage, registriesPageAction, demographicPageAction, injuryPageAction, prehospitalPageAction, referringFacilityPageAction, edResusPageAction, diagnosisPageAction, outcomePageAction, patientTrackingPageAction }, testInfo) => {
     testInfo.annotations.push({ type: 'testrail', description: 'C325052' });
     const traumaDetails = TraumaData.getTraumaData();
 
@@ -71,7 +70,7 @@ test.describe('Field validation', () => {
 
     // ---------------- DIAGNOSIS ----------------
     const preArrivalCardiacArrest = ComorbiditiesData.getComorbiditiesData().preArrivalCardiacArrest;
-    const injuryCodingData = InjurycodingData.getInjuryCodingData();
+    const injuryCodingData = InjuryCodingData.getInjuryCodingData();
     await diagnosisPageAction.populateTheFormOfDiagnosisTab(preArrivalCardiacArrest, injuryCodingData);
     availableFieldValidation = await referringFacilityPage.clickOnRecheckBtnAndGetListOfFieldValidationPresentInResultPopup();
     await diagnosisPageAction.verifyDiagnosisMandatoryFields(availableFieldValidation);
@@ -93,4 +92,3 @@ test.describe('Field validation', () => {
     await patientTrackingPageAction.verifyPatientTrackingMandatoryFields(availableFieldValidation);
   });
 });
-

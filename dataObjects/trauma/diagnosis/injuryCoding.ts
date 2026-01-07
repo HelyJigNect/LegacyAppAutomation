@@ -1,4 +1,4 @@
-export interface Injurycoding{
+export interface InjuryCoding{
     narrative?: string;
     iss?: string;
     icd10?: string;

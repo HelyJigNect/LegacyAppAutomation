@@ -1,3 +1,4 @@
+import { DemographicTab, QATrackingTab, TDPTab } from "../data/enum/tabNames";
 import { PatientData } from "../dataFactory/trauma/demographic/patientData";
 import { RecordInfoData } from "../dataFactory/trauma/demographic/recordInfoData";
 import { TraumaData } from "../dataFactory/trauma/traumaData";
@@ -7,7 +8,7 @@ const lastNameVTEField = 'VTE scenario'
 const lastNameNTDBField = 'NTDB Complications scenario'
 const lastNameQaItemsField = 'QA Items scenario'
 
-test.describe.skip('Form 45 - Confluence scenarios', () => {
+test.describe('Form 45 - Confluence scenarios', () => {
     let traumaNumber: any;
 
     test.afterEach(async ({ registriesPageAction }) => {
@@ -31,7 +32,7 @@ test.describe.skip('Form 45 - Confluence scenarios', () => {
         await test.step(`Trauma Number : ${traumaNumber} `, () => { })
 
         await test.step('Click on the Patient tab', async () => {
-            await registriesPageAction.navigateToForm('Patient', 'Patient Information')
+            await registriesPageAction.navigateToForm(DemographicTab.Patient, 'Patient Information')
         })
 
         await test.step('Verify the available option in the Speed scree and race field values upon selecting the race option from the Race speed screen', async () => {
@@ -68,7 +69,7 @@ test.describe.skip('Form 45 - Confluence scenarios', () => {
         await test.step(`Trauma Number : ${traumaNumber} `, () => { })
 
         await test.step('Navigate To TDP tab', async () => {
-            await registriesPageAction.navigateToTab('TDP')
+            await registriesPageAction.navigateToTab(TDPTab.TDP)
         })
 
         await test.step('Enter nonexistent code in VTE Prophylaxis & verify that nonexistent/invalid code cannot be entered and are not retained in the field', async () => {
@@ -99,7 +100,7 @@ test.describe.skip('Form 45 - Confluence scenarios', () => {
         await test.step(`Trauma Number : ${traumaNumber} `, () => { })
 
         await test.step('Navigate To QA Tracking - QA Items tab', async () => {
-            await registriesPageAction.navigateToTab('QA Tracking')
+            await registriesPageAction.navigateToTab(QATrackingTab.QATracking)
         })
 
         let qaItemsDetails;
@@ -129,8 +130,8 @@ test.describe.skip('Form 45 - Confluence scenarios', () => {
         await test.step(`Trauma Number : ${traumaNumber} `, () => { })
 
         await test.step('Navigate To QA Tracking - QA Tracking tab', async () => {
-            await registriesPageAction.navigateToTab('QA Tracking')
-            await qaTrackingPage.clickOnTabOfSubNavbarOfQaTracking('QA Tracking');
+            await registriesPageAction.navigateToTab(QATrackingTab.QATracking)
+            await qaTrackingPage.clickOnTabOfSubNavbarOfQaTracking(QATrackingTab.QATracking);
         })
 
         let qaItemOptionsHierarchy: any;

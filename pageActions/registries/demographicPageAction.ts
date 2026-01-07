@@ -9,13 +9,10 @@ import { PatientInformationMandatoryField } from "../../data/enum/demographic/pa
 import { PatientAddressInformationMandatoryField } from "../../data/enum/demographic/patient";
 import { DemographicTab } from "../../data/enum/tabNames";
 
-
 export class DemographicPageAction {
-    private registriesPage: RegistriesPage;
     private demographicPage: DemographicPage;
 
     constructor(page: Page) {
-        this.registriesPage = new RegistriesPage(page);
         this.demographicPage = new DemographicPage(page);
     }
 
@@ -24,7 +21,6 @@ export class DemographicPageAction {
         const traumaNumber = await this.demographicPage.populateFieldOfIdentifiersForm(identifiersData)
 
         // Form of Patient sub tab 
-        // await this.demographicPage.clickOnTabFromNavbar('Patient');
         await this.demographicPage.clickOnTabFromNavbar(DemographicTab.Patient);
         await this.demographicPage.populateFieldOfPatientInformationForm(patientInfo);
         await this.demographicPage.populateFieldOfPatientAddressInformationForm(patientAddressInfo);

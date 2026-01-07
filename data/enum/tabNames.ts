@@ -13,7 +13,7 @@ export enum DiagnosisTab {
 export enum EdResusTab {
   EDResus = 'ED/Resus',
   InitialAssessment = 'Initial Assessment',
-  LabsToxicology = 'Labs/Toxicology',  
+  LabsToxicology = 'Labs/Toxicology',
 }
 
 export enum InjuryTab {
@@ -34,6 +34,14 @@ export enum PreHospitalTab {
   Prehospital = 'Prehospital',
 }
 
-export enum ReferingFacilityTab {
+export enum ReferringFacilityTab {
   ReferringFacility = 'Referring Facility',
+}
+
+export enum TDPTab {
+  TDP = 'TDP',
+}
+
+export enum QATrackingTab {
+  QATracking = 'QA Tracking',
 }

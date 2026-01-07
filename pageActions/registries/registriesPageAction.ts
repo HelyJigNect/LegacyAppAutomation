@@ -31,7 +31,6 @@ export class RegistriesPageAction {
     }
 
     async navigateToTraumaPageAndStartAddingNewTraumaRecord(traumaData: Trauma) {
-        // console.log('Navigate to trauma page')
         await this.homePage.navigateToTraumaPageUsingNavbar();
         expect(await this.registriesPage.isTraumaManagerGridDisplayed(), 'Trauma Manager Grid is not displayed').toBeTruthy();
 
@@ -79,21 +78,6 @@ export class RegistriesPageAction {
         await this.registriesPage.clickOnViewIconForTraumaNumber(traumaNumber);
     }
 
-    // async verifyInitialMandatoryFields(availableFieldValidation: { field: string; message: string }[]) {
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, IdentifiersMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientInformationMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientAddressInformationMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ECodesMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PrehospitalInformationMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ImmediateReferringFacilityMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ArrivalInformationMandatoryFields)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, InitialAssessmentMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, VitalsMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, AlcoholMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ComorbiditiesMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, DischargeInformationMandatoryField)).toBeTruthy();
-    //     expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, BillingMandatoryField)).toBeTruthy();
-    // }
     async verifyInitialMandatoryFields(availableFieldValidation: { field: string; message: string }[]) {
         const mandatoryFields = [
             IdentifiersMandatoryField,

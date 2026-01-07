@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 import { RegistriesPage } from "./registriesPage";
-import { Injurycoding } from "../../dataObjects/trauma/diagnosis/injuryCoding";
+import { InjuryCoding } from "../../dataObjects/trauma/diagnosis/injuryCoding";
 
 export class DiagnosisPage extends RegistriesPage {
     constructor(page: Page) {
@@ -20,7 +20,7 @@ export class DiagnosisPage extends RegistriesPage {
         await this.clickAndSelectCheckbox(this.preArrivalCardiacArrestCheckbox, preArrivalCardiacArrest)
     }
 
-    async populateFieldsOfInjuryCodingForm(injuryCodingData: Injurycoding): Promise<string> {
+    async populateFieldsOfInjuryCodingForm(injuryCodingData: InjuryCoding): Promise<string> {
         await this.fillInput(this.narrativeTextarea, injuryCodingData.narrative!);
         await this.clickElement(this.triCodeIcd10Ais2015Button);
         await this.page.waitForTimeout(2000);;

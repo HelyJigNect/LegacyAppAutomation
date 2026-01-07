@@ -1,6 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import { DiagnosisPage } from "../../pages/registries/diagnosisPage";
-import { Injurycoding } from "../../dataObjects/trauma/diagnosis/injuryCoding";
+import { InjuryCoding } from "../../dataObjects/trauma/diagnosis/injuryCoding";
 import { ComorbiditiesMandatoryField } from "../../data/enum/diagnosis/comorbidities";
 import { DiagnosisTab } from "../../data/enum/tabNames";
 
@@ -12,7 +12,7 @@ export class DiagnosisPageAction {
         this.diagnosisPage = new DiagnosisPage(page);
     }
 
-    async populateTheFormOfDiagnosisTab(preArrivalCardiacArrest: string, injuryCodingData: Injurycoding): Promise<string> {
+    async populateTheFormOfDiagnosisTab(preArrivalCardiacArrest: string, injuryCodingData: InjuryCoding): Promise<string> {
         await this.diagnosisPage.clickOnTabFromNavbar(DiagnosisTab.Diagnosis);
         const issValue = await this.diagnosisPage.populateFieldsOfInjuryCodingForm(injuryCodingData);
         await this.diagnosisPage.clickOnTabFromNavbar(DiagnosisTab.Comorbidities);
@@ -21,15 +21,15 @@ export class DiagnosisPageAction {
     }
 
     //validation
-    async verifyDiagnosisTab(preArrivalCardiacArrest: string, injuryCodingData: Injurycoding) {
+    async verifyDiagnosisTab(preArrivalCardiacArrest: string, injuryCodingData: InjuryCoding) {
         await this.diagnosisPage.clickOnTabFromNavbar(DiagnosisTab.Diagnosis);
-        const actualInjurycoding: Injurycoding = {
+        const actualInjuryCoding: InjuryCoding = {
                     iss: await this.diagnosisPage.getIss()  ,
                     icd10: await this.diagnosisPage.getIcd10(), 
                     preDot: await this.diagnosisPage.getPreDot(), 
                     severity: await this.diagnosisPage.getSeverity(), 
         };
-        expect(actualInjurycoding).toMatchObject({
+        expect(actualInjuryCoding).toMatchObject({
                     iss: injuryCodingData.iss,
                     icd10: injuryCodingData.icd10,
                     preDot: injuryCodingData.preDot,

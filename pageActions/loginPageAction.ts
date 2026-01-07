@@ -17,5 +17,4 @@ export class LoginPageAction {
         await this.loginPage.login(loginDetails)
         expect(await this.homePage.isSsGen6HeaderDisplayed(), 'SS Gen 6 Header is not displayed').toBeTruthy();
     }
-
 } 
