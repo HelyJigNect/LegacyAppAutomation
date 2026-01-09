@@ -18,6 +18,9 @@ export class InitialDischargeData {
             case 'il_uat':
                 dischargedTo = 'Home or Self Care (Routine Discharge)'
                 break;
+            case 'sd_uat':
+                dischargedTo = 'Home or Self Care (Routine Discharge)'
+                break;
 
             default:
                 dischargedTo = 'Home or Self-Care (Routine Discharge)';
@@ -31,7 +34,9 @@ export class InitialDischargeData {
             dischargeTime: TsHelper.getRandomTime(19, 23),
             dischargeStatus: '1',
             dischargeStatusDescription: 'Alive',
-            dischargedTo
+            dischargedTo,
+            ImpedimentsToDischargeCode: '0',
+            ImpedimentsToDischargeDescription: 'None'
         };
     }
 }

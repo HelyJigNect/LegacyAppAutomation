@@ -65,7 +65,7 @@ export class DemographicPage extends RegistriesPage {
         await this.selectDropDownOption(this.genderIdentityDropdown, this.optionOfGenderIdentityDropdown(patientInfo.genderId))
         await this.selectDropDownOption(this.ethnicityDropdown, this.optionOfEthnicityDropdown(patientInfo.ethnicity))
         await this.selectDropDownOption(this.genderAffirmingHormoneTherapyDropdown, this.optionOfGenderAffirmingHormoneTherapyDropdown(patientInfo.genderAHT))
-
+      
         switch (process.env.ENV) {
             case 'al_uat':
                 await this.fillInput(this.ssnInput, patientInfo.ssn)
@@ -73,7 +73,7 @@ export class DemographicPage extends RegistriesPage {
             case 'il_uat':
                 await this.fillInput(this.ssnInput, patientInfo.ssn)
                 break;
-            case 'montana_uat':
+            case 'sd_uat':
                 await this.fillInput(this.ssnInput, patientInfo.ssn)
                 break;
         }

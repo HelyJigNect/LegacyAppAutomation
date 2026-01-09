@@ -20,6 +20,10 @@ export class OutcomePage extends RegistriesPage {
     private hospitalDaysInput = `//di-int-input[@field-information-name="Trauma.HospitalDays"]//input`
     private dischargedToDropdown = `//di-code-and-description-field[@field-information-name="Trauma.DischargeDisposition"]//div[@uib-dropdown]`
     private optionOfDischargedToDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.DischargeDisposition"]//span[contains(text(),', ${optionValue}')]`
+    private impedimentsToDischargeDropdown = `//di-code-and-description-field[@field-information-name="Trauma.DischargeImpediments.0.Code"]//div[@auto-close="disabled"]//input`
+    private impedimentsToDischargeDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.DischargeImpediments.0.Code"]//div[@auto-close="disabled"]//input`
+    private optionOfImpedimentsToDischargeDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.DischargeImpediments.0.Code"]//span[contains(text(),', ${optionValue}')]`
+    
 
     //Locators of the Billing form
     private primaryPayorDropdown = `//di-code-and-description-field[@field-information-name="Trauma.Payors.0.Code"]//div[@uib-dropdown]`
@@ -34,9 +38,16 @@ export class OutcomePage extends RegistriesPage {
         const hospitalDay = await this.getElementText(this.hospitalDaysInput)
         await this.fillInput(this.icuDaysInput, hospitalDay)
         await this.fillInput(this.ventilatorDaysInput, hospitalDay)
-        await this.scrollAndSelectDropdownOption(this.dischargedToDropdown, this.optionOfDischargedToDropdown(dischargeInfoData.dischargedTo))
         await this.clickElement(this.dischargeStatusInput);
         await this.typeUsingKeyboard(dischargeInfoData.dischargeStatus);
+        await this.page.waitForTimeout(1000);
+        await this.page.keyboard.press('Escape');
+        await this.scrollAndSelectDropdownOption(this.dischargedToDropdown, this.optionOfDischargedToDropdown(dischargeInfoData.dischargedTo))
+        switch (process.env.ENV) {
+            case 'sd_uat':
+                await this.scrollAndSelectDropdownOption(this.impedimentsToDischargeDropdown, this.optionOfImpedimentsToDischargeDropdown(dischargeInfoData.ImpedimentsToDischargeDescription))
+                break;
+        }
         return hospitalDay;
     }
     
@@ -80,5 +91,13 @@ export class OutcomePage extends RegistriesPage {
 
     async getDischargeStatusDescription() {
         return this.getValue('text', this.dischargeStatusDescriptionInput);
+    }
+
+    async getImpedimentsToDischargeCode() {
+        return this.getValue('text', this.impedimentsToDischargeDropdown);
+    }
+
+    async getImpedimentsToDischargeDescription() {
+        return this.getValue('dropdown', 'ImpedimentstoDischarge1Row');
     }
 }

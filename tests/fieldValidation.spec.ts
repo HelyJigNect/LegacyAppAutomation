@@ -17,7 +17,8 @@ import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locat
 
 const checkFieldValidation_LastName = "Field validation"
 test.describe('Field validation', () => {
-  test('Check field validation', async ({ registriesPage, referringFacilityPage, registriesPageAction, demographicPageAction, injuryPageAction, prehospitalPageAction, referringFacilityPageAction, edResusPageAction, diagnosisPageAction, outcomePageAction, patientTrackingPageAction }, testInfo) => {
+  test('Check field validation', async ({registriesPage, referringFacilityPage, registriesPageAction, demographicPageAction, injuryPageAction, prehospitalPageAction, referringFacilityPageAction, edResusPageAction, diagnosisPageAction, outcomePageAction, patientTrackingPageAction}, testInfo) => 
+  {
     testInfo.annotations.push({ type: 'testrail', description: 'C325052' });
     const traumaDetails = TraumaData.getTraumaData();
 
@@ -44,6 +45,7 @@ test.describe('Field validation', () => {
     const injuryInformation = InjuryInfoData.getInjuryInfoData(traumaDetails.arrivalDate);
     const eCodesData = MechanismOfInjuryData.getECodesData();
     await injuryPageAction.populateTheFormOfInjuryTab(injuryInformation, eCodesData);
+    await registriesPage.clickOnBtnOfPatientGrid('Check');
     availableFieldValidation = await referringFacilityPage.clickOnRecheckBtnAndGetListOfFieldValidationPresentInResultPopup();
     await injuryPageAction.verifyInjuryMandatoryFields(availableFieldValidation);
 
@@ -79,6 +81,7 @@ test.describe('Field validation', () => {
     const dischargeInformation = InitialDischargeData.getDischargeInformationData(patientArrivalDetails.edDepartureOrderDate);
     const billingData = BillingData.getBillingInfoData();
     await outcomePageAction.populateTheFormOfOutcomeTab(dischargeInformation, billingData);
+    await registriesPage.clickOnBtnOfPatientGrid('Check');
     availableFieldValidation = await referringFacilityPage.clickOnRecheckBtnAndGetListOfFieldValidationPresentInResultPopup();
     referringFacilityPage.clickOnCancelButtonIfSpeedScreenDisplayed();
     await outcomePageAction.verifyOutcomeMandatoryFields(availableFieldValidation);

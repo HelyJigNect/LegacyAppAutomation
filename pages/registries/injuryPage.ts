@@ -2,6 +2,7 @@ import { Page } from "@playwright/test";
 import { InjuryInformation } from "../../dataObjects/trauma/injury/injuryInformation";
 import { MechanismOfInjury } from "../../dataObjects/trauma/injury/mechanismOfInjury";
 import { RegistriesPage } from "./registriesPage";
+import { InjuryTab } from "../../data/enum/tabNames";
 
 export class InjuryPage extends RegistriesPage {
     constructor(page: Page) {
@@ -38,6 +39,13 @@ export class InjuryPage extends RegistriesPage {
     private tertiaryICD10MechanismDropdown = `//di-code-and-description-field[@field-information-name="Trauma.Ecodes.2.Icd10Code"]//div[@uib-dropdown]`
     private optionOfTertiaryICD10MechanismDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.Ecodes.2.Icd10Code"]//span[contains(text(),'${optionValue}')]`
 
+    private injuryMechanismDropdown = `//di-code-and-description-field[@field-information-name="Trauma.InjuryMechanisms.0.Code"]//div[@auto-close="disabled"]/input`
+    private injuryMechanismDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.InjuryMechanisms.0.Code"]//div[@auto-close="disabled"]//following-sibling::input`
+    private optionOfInjuryMechanismDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.InjuryMechanisms.0.Code"]//span[contains(text(),', ${optionValue}')]`    
+    private disasterCasualtyDropdown = `//di-code-and-description-field[@field-information-name="Trauma.CasualtyType"]//div[@auto-close="disabled"]/input`
+    private disasterCasualtyDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.CasualtyType"]//div[@auto-close="disabled"]//following-sibling::input`
+    private optionOfDisasterCasualtyDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.CasualtyType"]//span[contains(text(),', ${optionValue}')]` 
+
     private injuryTypeInput = `//di-code-and-description-field[@field-information-name="Trauma.InjuryTypes.0.Code"]//div[contains(@class,'dropdown')]/input`
     private injuryTypeDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.InjuryTypes.0.Code"]//input[@title]`
     private injuryTypeDropdown = (optionValue: string) =>`//ul[contains(@di-append-to-body,'Trauma.InjuryTypes.0.Code')]//span[contains(text(),'${optionValue}')]`
@@ -60,10 +68,19 @@ export class InjuryPage extends RegistriesPage {
         }
     }
 
-    async populateFieldOfECodesForm(eCodesData: MechanismOfInjury): Promise<void> {       
+    async populateFieldOfECodesForm(eCodesData: MechanismOfInjury): Promise<void> {     
+        await this.page.keyboard.press('Escape'); 
+        await this.scrollAndSelectDropdownOption(this.primaryICD10MechanismDropdown, this.optionOfPrimaryICD10MechanismDropdown(eCodesData.primaryICD10Mechanism))  
+        await this.page.keyboard.press('Escape'); 
         await this.clickElement(this.injuryTypeInput);
-        await this.clickElement(this.injuryTypeDropdown(eCodesData.injuryTypeCode!));
-        await this.scrollAndSelectDropdownOption(this.primaryICD10MechanismDropdown, this.optionOfPrimaryICD10MechanismDropdown(eCodesData.primaryICD10Mechanism))        
+        await this.clickElement(this.injuryTypeDropdown(eCodesData.injuryTypeCode!));   
+        await this.page.keyboard.press('Escape');   
+        switch (process.env.ENV) {
+            case 'sd_uat':
+                await this.scrollAndSelectDropdownOption(this.injuryMechanismDropdown, this.optionOfInjuryMechanismDropdown(eCodesData.injuryMechanismDescription!))
+                await this.scrollAndSelectDropdownOption(this.disasterCasualtyDropdown, this.optionOfDisasterCasualtyDropdown(eCodesData.disasterCasualtyDescription!))
+                break;            
+        }       
     }
 
     //getter methods
@@ -132,5 +149,21 @@ export class InjuryPage extends RegistriesPage {
 
     async getInjuryTypeDescription() {
         return this.getValue('text', this.injuryTypeDescriptionInput);
+    }
+
+    async getInjuryMechanismCode() {
+        return this.getValue('text', this.injuryMechanismDropdown);
+    }
+
+    async getInjuryMechanismDescription() {
+        return this.getValue('text', this.injuryMechanismDescriptionInput);
+    }
+
+    async getDisasterCasualtyCode() {
+        return this.getValue('text', this.disasterCasualtyDropdown);
+    }
+
+    async getDisasterCasualtyDescription() {
+        return this.getValue('text', this.disasterCasualtyDescriptionInput);
     }
 }

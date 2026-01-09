@@ -23,6 +23,12 @@ export class ArrivalData {
             intubationPriorToArrival: "Not Applicable",
             postEdDisposition: "Operating Room",
             primaryTraumaServiceType: "Unknown",
+            modeOfArrivalCode: "1",
+            modeOfArrivalDescription: "Ground Ambulance",
+            responseLevelCode: "1",
+            responseLevelDescription: "Full",
+            responseActivationDate: TsHelper.formatDate(edDepartureDateObj),
+            responseActivationTime: TsHelper.getRandomTime(0, 6)
         }
     }
 }

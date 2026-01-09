@@ -25,6 +25,13 @@ export class EdResusPage extends RegistriesPage {
     private optionOfPostEdDispositionDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.PostEdDisposition"]//span[contains(text(),', ${optionValue}')]`
     private primaryTraumaServiceTypeDropdown = `//di-code-and-description-field[@field-information-name="Trauma.PrimaryTraumaServiceType"]//div[@uib-dropdown]`
     private optionOfPrimaryTraumaServiceTypeDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.PrimaryTraumaServiceType"]//span[contains(text(),', ${optionValue}')]`
+    private modeOfArrivalDropdown = `//di-code-and-description-field[@field-information-name="Trauma.FacilityArrivalMode"]//div[@uib-dropdown]/input`
+    private optionOfModeOfArrivalDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.FacilityArrivalMode"]//span[contains(text(),', ${optionValue}')]`
+    private responseLevelTypeDropdown = `//di-code-and-description-field[@field-information-name="Trauma.ActivationType"]//div[@uib-dropdown]/input`
+    private optionOfResponseLevelDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.ActivationType"]//span[contains(text(),', ${optionValue}')]`
+
+    private responseActivationDateInput = `//di-date-input[@field-information-name="Trauma.TraumaActivationDate"]//input`
+    private responseActivationTimeInput = `//di-time-input[@field-information-name="Trauma.TraumaActivationTime"]//input`
 
     //Locator of ED/Resus > Initial Assessment Form
     private weightInput = `//di-float-input[@field-information-name="Trauma.EdAssessments.0.Weight.Value"]//input`
@@ -58,6 +65,10 @@ export class EdResusPage extends RegistriesPage {
     private motorDropdown = `//di-code-and-description-field[@field-information-name="Trauma.EdAssessments.0.Gcs.Motor"]//div[@uib-dropdown]`
     private optionOfMotorDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.EdAssessments.0.Gcs.Motor"]//span[contains(text(),', ${optionValue}')]`
 
+    //Locator of ED/Resus > Vitals Form
+    private warmingMeasuresDropdown = `//di-code-and-description-field[@field-information-name="Trauma.WarmingMeasure"]//div[@uib-dropdown]/input`
+    private optionOfWarmingMeasuresDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.WarmingMeasure"]//span[contains(text(),', ${optionValue}')]`
+
     //Locator of ED/Resus > Labs/Toxicology
     private alcoholUseIndicatorDropdown = `//di-code-and-description-field[@field-information-name="Trauma.AlcoholUseIndicator"]//div[@uib-dropdown]`
     private optionOfAlcoholUseIndicatorDropdown =(optionValue: string) => `//ul[@di-append-to-body="Trauma.AlcoholUseIndicator"]//span[contains(text(),', ${optionValue}')]`
@@ -74,6 +85,14 @@ export class EdResusPage extends RegistriesPage {
         await this.scrollAndSelectDropdownOption(this.intubationPriorToArrivalDropdown, this.optionOfIntubationPriorToArrivalDropdown(arrivalData.intubationPriorToArrival))        
         await this.scrollAndSelectDropdownOption(this.primaryTraumaServiceTypeDropdown, this.optionOfPrimaryTraumaServiceTypeDropdown(arrivalData.primaryTraumaServiceType))
         await this.scrollAndSelectDropdownOption(this.postEdDispositionDropdown, this.optionOfPostEdDispositionDropdown(arrivalData.postEdDisposition))
+        switch (process.env.ENV) {
+            case 'sd_uat':
+                await this.scrollAndSelectDropdownOption(this.modeOfArrivalDropdown, this.optionOfModeOfArrivalDropdown(arrivalData.modeOfArrivalDescription))
+                await this.scrollAndSelectDropdownOption(this.responseLevelTypeDropdown, this.optionOfResponseLevelDropdown(arrivalData.responseLevelDescription))
+                await this.fillInput(this.responseActivationDateInput, arrivalData.responseActivationDate)
+                await this.fillInput(this.responseActivationTimeInput, arrivalData.responseActivationTime)
+                break;
+        }    
     }
 
     async populateFieldOfInitialAssessment(initialAssessmentData: InitialAssessment): Promise<void> {
@@ -88,7 +107,7 @@ export class EdResusPage extends RegistriesPage {
         await this.clickAndSelectCheckbox(this.intubatedCheckbox, initialAssessmentData.intubated)
         await this.clickAndSelectCheckbox(this.sedatedCheckbox, initialAssessmentData.sedated)
         await this.clickAndSelectCheckbox(this.respirationAssistedCheckbox, initialAssessmentData.respirationAssisted)
-        await this.clickAndSelectCheckbox(this.eyeObstructionCheckbox, initialAssessmentData.eyeObstruction)
+        await this.clickAndSelectCheckbox(this.eyeObstructionCheckbox, initialAssessmentData.eyeObstruction) 
     }
 
     async populateFieldOfVitalsForm(vitalsData: Vitals): Promise<void> {
@@ -100,7 +119,15 @@ export class EdResusPage extends RegistriesPage {
         await this.clickAndSelectCheckbox(this.supplementalO2Checkbox, vitalsData.supplementalO2, this.supplementalO2CheckboxValue)
         await this.scrollAndSelectDropdownOption(this.eyeDropdown, this.optionOfEyeDropdown(vitalsData.eye))
         await this.scrollAndSelectDropdownOption(this.verbalDropdown, this.optionOfVerbalDropdown(vitalsData.verbal))
-        await this.scrollAndSelectDropdownOption(this.motorDropdown, this.optionOfMotorDropdown(vitalsData.motor))
+        await this.scrollAndSelectDropdownOption(this.motorDropdown, this.optionOfMotorDropdown(vitalsData.motor))   
+    }
+
+    async populateFieldOfVitalsTab(vitalsData: Vitals): Promise<void> {
+        switch (process.env.ENV) {
+            case 'sd_uat':
+                await this.scrollAndSelectDropdownOption(this.warmingMeasuresDropdown, this.optionOfWarmingMeasuresDropdown(vitalsData.warmingMeasuresDescription))
+                break;
+        }
     }
 
     async populateFieldOfAlcoholForm(alcoholData: Alcohol): Promise<void> {
@@ -142,8 +169,40 @@ export class EdResusPage extends RegistriesPage {
         return this.getValue('dropdown', 'PostEDDispositionRow');
     }
 
+    async getModeOfArrivalCode() {
+        return this.getValue('text', this.modeOfArrivalDropdown);
+    }
+
+    async getModeOfArrivalDescription() {
+        return this.getValue('dropdown', 'ModeofArrivalRow');
+    }
+
+    async getResponseLevelCode() {
+        return this.getValue('text', this.responseLevelTypeDropdown);
+    }
+
+    async getResponseLevelDescription() {
+        return this.getValue('dropdown', 'ResponseActivationLevelRow');
+    }
+
     async getPrimaryTraumaServiceType() {
         return this.getValue('dropdown', 'PrimaryTraumaServiceTypeRow');
+    }
+
+    async getWarmingMeasuresCode() {
+        return this.getValue('text', this.warmingMeasuresDropdown);
+    }
+
+    async getWarmingMeasuresDescription() {
+        return this.getValue('dropdown', 'EdMedicationRow');
+    }
+
+    async getResponseActivationDate() {
+        return this.getValue('text', this.responseActivationDateInput);
+    }
+
+    async getResponseActivationTime() {
+        return this.getValue('text', this.responseActivationTimeInput);
     }
 
     // INITIAL ASSESSMENT

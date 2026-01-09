@@ -7,6 +7,9 @@ export class BillingData {
             case 'il_uat':
                 primaryPayor = 'Self Pay'
                 break;
+            case 'sd_uat':
+                primaryPayor = 'Self Pay'
+                break;
 
             default:
                 primaryPayor = 'Self-Pay';

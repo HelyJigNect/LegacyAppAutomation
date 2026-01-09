@@ -12,20 +12,24 @@ export class PatientTrackingPageAction {
     }
 
     async populateThePatientTrackingTab(locationServiceData: LocationService) {
-        await this.patientTrackingPage.clickOnTabFromNavbar(PatientTrackingTab.PatientTracking);
-        expect(await this.patientTrackingPage.isFormDisplayed('Location Tracking'), 'Patient Tracking form is not displayed').toBeTruthy();
-        await this.patientTrackingPage.populateFieldOfLocationServiceForm(locationServiceData)
+        if (process.env.ENV !== 'sd_uat') {
+            await this.patientTrackingPage.clickOnTabFromNavbar(PatientTrackingTab.PatientTracking);
+            expect(await this.patientTrackingPage.isFormDisplayed('Location Tracking'), 'Patient Tracking form is not displayed').toBeTruthy();
+            await this.patientTrackingPage.populateFieldOfLocationServiceForm(locationServiceData)
+        }
     }
 
     //validation
     async verifyPatientTrackingTab(locationService: Partial<LocationService>) {
-        await this.patientTrackingPage.clickOnTabFromNavbar(PatientTrackingTab.PatientTracking);
-        const actualLocationService: Partial<LocationService> = {
-            locationCode: '?',
-            locationDescription: await this.patientTrackingPage.getLocationDescription(),
-            icuDays: await this.patientTrackingPage.getIcuDays()
-        };
-        expect(actualLocationService).toEqual(locationService);
+        if (process.env.ENV !== 'sd_uat') {
+            await this.patientTrackingPage.clickOnTabFromNavbar(PatientTrackingTab.PatientTracking);
+            const actualLocationService: Partial<LocationService> = {
+                locationCode: '?',
+                locationDescription: await this.patientTrackingPage.getLocationDescription(),
+                icuDays: await this.patientTrackingPage.getIcuDays()
+            };
+            expect(actualLocationService).toEqual(locationService);
+        }
     }
 
     async verifyPatientTrackingMandatoryFields(availableFieldValidation: { field: string; message: string }[]) {
