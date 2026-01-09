@@ -13,7 +13,8 @@ export enum DiagnosisTab {
 export enum EdResusTab {
   EDResus = 'ED/Resus',
   InitialAssessment = 'Initial Assessment',
-  LabsToxicology = 'Labs/Toxicology',
+  LabsToxicology = 'Labs/Toxicology',  
+  Vitals = 'Vitals',
 }
 
 export enum InjuryTab {

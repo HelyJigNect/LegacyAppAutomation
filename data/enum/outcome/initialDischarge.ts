@@ -8,14 +8,6 @@ let DischargeInformationMandatoryField: { field: string; message: string }[] = [
     message: 'Discharge Time should not be blank'
   },
   {
-    field: 'ICU Days',
-    message: 'ICU Days should not be blank or unknown'
-  },
-  {
-    field: 'Ventilator Days',
-    message: 'Total Ventilator Days should not be blank or unknown'
-  },
-  {
     field: 'Discharged To',
     message: 'Discharged To should not be blank'
   }
@@ -31,7 +23,15 @@ switch (process.env.ENV) {
       {
         field: 'Discharge Order Time',
         message: 'Discharge Order Time should not be blank'
-      }
+      },
+      {
+        field: 'ICU Days',
+        message: 'ICU Days should not be blank or unknown'
+      },
+      {
+        field: 'Ventilator Days',
+        message: 'Total Ventilator Days should not be blank or unknown'
+      },
     );
     break;
 
@@ -44,7 +44,36 @@ switch (process.env.ENV) {
       {
         field: 'Discharge Order Time',
         message: 'Discharge Order Time should be blank'
-      }
+      },
+      {
+        field: 'ICU Days',
+        message: 'ICU Days should not be blank or unknown'
+      },
+      {
+        field: 'Ventilator Days',
+        message: 'Total Ventilator Days should not be blank or unknown'
+      },
+    );
+    break;
+
+  case 'sd_uat':
+    DischargeInformationMandatoryField.push(
+      {
+        field: 'Discharge Order Date',
+        message: 'Discharge Order Date should be blank'
+      },
+      {
+        field: 'Discharge Order Time',
+        message: 'Discharge Order Time should be blank'
+      },
+      {
+        field: 'Total ICU Days',
+        message: 'ICU Days should not be blank or unknown'
+      },
+      {
+        field: 'Total Ventilator Days',
+        message: 'Total Ventilator Days should not be blank or unknown'
+      },
     );
     break;
 }

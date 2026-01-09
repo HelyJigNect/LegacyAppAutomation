@@ -8,11 +8,15 @@ import { IdentifiersMandatoryField } from "../../data/enum/demographic/recordInf
 import { PatientInformationMandatoryField } from "../../data/enum/demographic/patient";
 import { PatientAddressInformationMandatoryField } from "../../data/enum/demographic/patient";
 import { DemographicTab } from "../../data/enum/tabNames";
+import { el } from "@faker-js/faker/.";
+
 
 export class DemographicPageAction {
+    private registriesPage: RegistriesPage;
     private demographicPage: DemographicPage;
 
     constructor(page: Page) {
+        this.registriesPage = new RegistriesPage(page);
         this.demographicPage = new DemographicPage(page);
     }
 
@@ -21,6 +25,7 @@ export class DemographicPageAction {
         const traumaNumber = await this.demographicPage.populateFieldOfIdentifiersForm(identifiersData)
 
         // Form of Patient sub tab 
+        // await this.demographicPage.clickOnTabFromNavbar('Patient');
         await this.demographicPage.clickOnTabFromNavbar(DemographicTab.Patient);
         await this.demographicPage.populateFieldOfPatientInformationForm(patientInfo);
         await this.demographicPage.populateFieldOfPatientAddressInformationForm(patientAddressInfo);
@@ -100,16 +105,23 @@ export class DemographicPageAction {
         });
 
         await this.demographicPage.clickOnTabFromNavbar(DemographicTab.Patient);    
+        
         const actualPatientInfo: PatientInfo = {
             dob: await this.demographicPage.getDateOfBirth(),
             gender: await this.demographicPage.getDropdownSelectedText('GenderRow'),
-            genderId: await this.demographicPage.getDropdownSelectedText('GenderIdentityRow'),
+            genderId: '',
             genderAHT: await this.demographicPage.getDropdownSelectedText('GenderAffirmingHormoneTherapyRow'),
             ethnicity: await this.demographicPage.getDropdownSelectedText('EthnicityRow'),
             race: await this.demographicPage.getRaceCode(patientInfo.race!),
             raceDescription: await this.demographicPage.getRaceDescription(patientInfo.race!),
-            ssn: await this.demographicPage.getSSN(),            
+            ssn: await this.demographicPage.getSSN()         
         };
+        if(process.env.ENV === 'sd_uat'){
+            actualPatientInfo.genderId = await this.demographicPage.getDropdownSelectedText('GenderIdentity')
+        }
+        else {
+            actualPatientInfo.genderId = await this.demographicPage.getDropdownSelectedText('GenderIdentityRow')
+        }
         expect(actualPatientInfo).toEqual(patientInfo);
 
         const actualAddress:  PatientAddressInfo= {

@@ -8,4 +8,10 @@ export interface Arrival {
     intubationPriorToArrival: string,
     postEdDisposition: string,
     primaryTraumaServiceType: string,
+    modeOfArrivalCode: string,
+    modeOfArrivalDescription: string,
+    responseLevelCode: string,
+    responseLevelDescription: string
+    responseActivationDate: string,
+    responseActivationTime: string
 }

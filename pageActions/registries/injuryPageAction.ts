@@ -47,6 +47,10 @@ export class InjuryPageAction {
             // tertiaryICD10Mechanism: await this.injuryPage.getTertiaryICD10Mechanism(),
             injuryTypeCode: await this.injuryPage.getInjuryTypeCode(),
             injuryTypeDescription: await this.injuryPage.getInjuryTypeDescription(),
+            injuryMechanismCode: await this.injuryPage.getInjuryMechanismCode(),
+            injuryMechanismDescription: await this.injuryPage.getInjuryMechanismDescription(),
+            disasterCasualtyCode: await this.injuryPage.getDisasterCasualtyCode(),
+            disasterCasualtyDescription: await this.injuryPage.getDisasterCasualtyDescription()
         };
         expect(actualECodes).toEqual(eCodes);
     }

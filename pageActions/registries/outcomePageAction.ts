@@ -37,7 +37,9 @@ export class OutcomePageAction {
             ventilatorDays: await this.outcomePage.getVentilatorDays(),
             dischargedTo: await this.outcomePage.getDischargedTo(),
             dischargeStatus: await this.outcomePage.getDischargeStatus(),
-            dischargeStatusDescription: await this.outcomePage.getDischargeStatusDescription()
+            dischargeStatusDescription: await this.outcomePage.getDischargeStatusDescription(),
+            ImpedimentsToDischargeCode: await this.outcomePage.getImpedimentsToDischargeCode(),
+            ImpedimentsToDischargeDescription: await this.outcomePage.getImpedimentsToDischargeDescription()
         };
         expect(actualDischargeInfo).toEqual(dischargeInfo);
 

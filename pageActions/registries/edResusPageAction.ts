@@ -28,6 +28,11 @@ export class EdResusPageAction {
         await this.edResusPage.populateFieldOfInitialAssessment(initialAssessmentData);
         await this.edResusPage.populateFieldOfVitalsForm(vitalsData);
 
+        //Vitals tab
+        await this.edResusPage.clickOnTabFromNavbar(EdResusTab.Vitals);
+        expect(await this.edResusPage.isFormDisplayed('Vitals Information'), 'Vitals Information form is not displayed').toBeTruthy();
+        await this.edResusPage.populateFieldOfVitalsTab(vitalsData);
+
         await this.edResusPage.clickOnTabFromNavbar(EdResusTab.LabsToxicology);
         expect(await this.edResusPage.isFormDisplayed('Alcohol'), 'Alcohol form is not displayed').toBeTruthy();
         await this.edResusPage.populateFieldOfAlcoholForm(alcoholData);
@@ -46,7 +51,13 @@ export class EdResusPageAction {
             signsOfLife: await this.edResusPage.getSignsOfLife(),
             intubationPriorToArrival: await this.edResusPage.getIntubationPriorToArrival(),
             postEdDisposition: await this.edResusPage.getPostEdDisposition(),
-            primaryTraumaServiceType: await this.edResusPage.getPrimaryTraumaServiceType()
+            primaryTraumaServiceType: await this.edResusPage.getPrimaryTraumaServiceType(),
+            modeOfArrivalCode: await this.edResusPage.getModeOfArrivalCode(),
+            modeOfArrivalDescription: await this.edResusPage.getModeOfArrivalDescription(),
+            responseLevelCode: await this.edResusPage.getResponseLevelCode(),
+            responseLevelDescription: await this.edResusPage.getResponseLevelDescription(),
+            responseActivationDate: await this.edResusPage.getResponseActivationDate(),
+            responseActivationTime: await this.edResusPage.getResponseActivationTime()  
         };
         expect(actualArrival).toEqual(arrivalData);
 
@@ -77,8 +88,13 @@ export class EdResusPageAction {
             supplementalO2: await this.edResusPage.getSupplementalO2(),
             eye: await this.edResusPage.getGcsEye(),
             verbal: await this.edResusPage.getGcsVerbal(),
-            motor: await this.edResusPage.getGcsMotor()
+            motor: await this.edResusPage.getGcsMotor(),           
+            warmingMeasuresCode: '',
+            warmingMeasuresDescription: ''
         };
+        await this.edResusPage.clickOnTabFromNavbar(EdResusTab.Vitals);
+        actualVitals.warmingMeasuresCode = await this.edResusPage.getWarmingMeasuresCode(),
+        actualVitals.warmingMeasuresDescription = await this.edResusPage.getWarmingMeasuresDescription()
         expect(actualVitals).toEqual(vitals);
 
         // ---------------------- LABS / ALCOHOL ----------------------

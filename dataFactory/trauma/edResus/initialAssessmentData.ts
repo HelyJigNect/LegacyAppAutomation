@@ -29,7 +29,9 @@ export class InitialAssessmentData {
             supplementalO2: "No",
             eye: "Opens Eyes Spontaneously",
             verbal: "Oriented (Pediatric (<= 2yrs): Smiles, Oriented to Sounds, Follows Objects, Interacts)",
-            motor: "Localizing Pain"
+            motor: "Localizing Pain",
+            warmingMeasuresCode: "0",
+            warmingMeasuresDescription: "No Warming Measures"
         }
     }
 }

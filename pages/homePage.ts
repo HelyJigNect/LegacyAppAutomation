@@ -39,6 +39,10 @@ export class HomePage extends BasePage {
         selector = this.pageHeadingWithNormalizeSpace("NOTS UAT Gen 6");
         break;
 
+      case 'sd_uat':
+        selector = this.pageHeadingWithNormalizeSpace("SD UAT Gen 6");
+        break;
+
       default:
         selector = this.pageHeading("SS DEV Gen 6");
     }
