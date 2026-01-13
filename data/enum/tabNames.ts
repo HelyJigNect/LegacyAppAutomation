@@ -35,6 +35,10 @@ export enum PreHospitalTab {
   Prehospital = 'Prehospital',
 }
 
+export enum ProceduresTab {
+  Procedures = 'Procedures',
+}
+
 export enum ReferringFacilityTab {
   ReferringFacility = 'Referring Facility',
 }

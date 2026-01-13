@@ -1,6 +1,5 @@
 
 import { Page } from '@playwright/test';
-// import { faker } from '@faker-js/faker';
 
 export class Helpers {
     constructor(public page: Page) { }
@@ -9,10 +8,6 @@ export class Helpers {
         await this.page.waitForSelector(selector, { timeout });
     }
 
-    // async clickElement(selector: string): Promise<void> {
-    //     await this.waitForElement(selector);
-    //     await this.page.click(selector);
-    // }
     async clickElement(selector: string, force: boolean = false): Promise<void> {
         await this.waitForElement(selector);
         await this.page.click(selector, { force });
@@ -127,7 +122,7 @@ export class Helpers {
                 throw new Error(`Sub-Option not found in dropdown`);
             }
         }
-        //await this.clickElement(dropdownSelector);
+        // await this.clickElement(dropdownSelector);
     }
 
     async scrollAndSelectDropdownOption(dropdownSelector: string, optionTextSelector: string, scrollStep: number = 100, maxScroll: number = 5000): Promise<void> {
@@ -193,9 +188,9 @@ export class Helpers {
     }
 
     //added for assertions
-    private getDropdownTextInput = (rowName: string)=> `tr[field-information-name="${rowName}"] input.item-description`;
+    private getDropdownTextInput = (rowName: string) => `tr[field-information-name="${rowName}"] input.item-description`;
     private relativeSuffix = "//following-sibling::input";
-    
+
     async getDropdownSelectedText(rowName: string): Promise<string> {
         return (await this.getElementText(this.getDropdownTextInput(rowName)));
     }
@@ -265,4 +260,16 @@ export class Helpers {
         );
     }
 
+    async waitForElementToDisappear(selector: string, timeout: number = 10000): Promise<void> {
+        let loaderLocator = this.page.locator(selector);
+
+        for (let i = 0; i < 2; i++) {
+            const count = await loaderLocator.count();
+            if (count > 0 && await loaderLocator.first().isVisible()) {
+                await loaderLocator.first().waitFor({ state: 'hidden', timeout });
+                return;
+            }
+            await this.page.waitForTimeout(200);
+        }
+    }
 }

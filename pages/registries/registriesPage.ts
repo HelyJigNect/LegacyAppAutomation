@@ -14,7 +14,7 @@ export class RegistriesPage extends BasePage {
   private arrivalDateCellOfTraumaManagerTable = (recordNumber: string) => `//div[text()='${recordNumber}']/../..//../..//div[@row-index="0"]//div[@col-id="Trauma.FacilityArrivalDate.#value"]/div`
   private dischargeDateCellOfTraumaManagerTable = (recordNumber: string) => `//div[text()='${recordNumber}']/../..//../..//div[@row-index="0"]//div[@col-id="Trauma.DischargeDate.#value"]/div`
 
-  private formOfRegistry = (formTitle: string) => `//di-panel-field//div[text()='${formTitle}']`;
+  private formOfRegistry = (formTitle: string) => `//di-panel-field[@class="ng-scope"]//div[text()='${formTitle}']`;
   private btnOfTraumaManagerGrid = (btnName: string) => `//div[contains(@class,'rm-heading')]//button[contains(text(),'${btnName}')]`
   private saveBtnOfNewTraumaGrid = `//span[text()='New Trauma']/../../../..//di-save-button[@di-save-button-default-label='Save']`;
 

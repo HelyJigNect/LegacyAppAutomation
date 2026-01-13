@@ -1,6 +1,7 @@
 import { Page } from "@playwright/test";
 import { TDPPage } from "../../pages/registries/tdpPage";
 import { expect } from "../../fixtures/fixtures";
+import { VteProphylaxisOption } from "../../dataObjects/trauma/tdp/processMeasure";
 
 export class TdpPageAction {
     private tdpPage: TDPPage;
@@ -25,6 +26,14 @@ export class TdpPageAction {
     async populateVteProphylaxisFieldOfProcessMeasure1Form(option: { code: string, description: string }) {
         await this.tdpPage.populateVteProphylaxisFieldOfProcessMeasure1Form(option.code, true);
         expect(await this.tdpPage.getVteProphylaxisDescriptionInputOfQaTrackingSpeedScreen()).toEqual(option.description)
+    }
+
+    async navigateToTDPTabAndVerifyTheVteProphylaxisDropdownOptions(vteProphylaxisOption: VteProphylaxisOption[]) {
+        await this.tdpPage.clickOnTabFromNavbar('TDP');
+        for (const option of vteProphylaxisOption) {
+            await this.tdpPage.selectOptionForVteProphylaxisDropdownOfProcessMeasure1Form(option.code);
+            expect(await this.tdpPage.getSelectedOptionOfVteProphylaxisDropdown()).toEqual(option);
+        }
     }
 
 }

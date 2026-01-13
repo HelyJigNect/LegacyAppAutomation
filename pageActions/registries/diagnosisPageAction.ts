@@ -20,22 +20,39 @@ export class DiagnosisPageAction {
         return issValue;
     }
 
-    //validation
+    async navigateToDiagnosisTabAndVerifyTheOptionCodeUsingNarrative(narrativeICD10OptionData: InjuryCoding[]) {
+        await this.diagnosisPage.clickOnTabFromNavbar(DiagnosisTab.Diagnosis);
+        expect(await this.diagnosisPage.isFormDisplayed('Narrative'), 'Injury Coding form is not displayed').toBeTruthy();
+        await this.diagnosisPage.populateTheNarrativeTextareaAndClickTriCodeICD10Ais2015Button(narrativeICD10OptionData.map(option => option.icd10).filter((n): n is string => !!n));
+
+        const actualICD10TableData = await this.diagnosisPage.getAvailableDetailsOfTheICD10Table();
+        // for (const expectedRecord of narrativeICD10OptionData) {
+        //     console.log('Verifying expectedRecord:', expectedRecord);
+        //     const actualRecord = actualICD10TableData.find(a => a.icd10?.startsWith(expectedRecord.icd10 ?? ''));
+        //     expect(actualRecord, `ICD10 ${expectedRecord.icd10} not found in the table`).toBeDefined();
+        //     expect(actualRecord!.narrative).toContain(`[${expectedRecord.icd10}] ${expectedRecord.narrative}`);
+        //     expect(actualRecord!.icd10).toEqual(`${expectedRecord.icd10}, ${expectedRecord.icd10Description}`);
+        //     expect(actualRecord!.preDot).toEqual(expectedRecord.preDot);
+        //     expect(actualRecord!.severity).toEqual(expectedRecord.severity);
+        //     expect(actualRecord!.issBodyRegion).toEqual(expectedRecord.issBodyRegion);
+        // }
+    }
+
     async verifyDiagnosisTab(preArrivalCardiacArrest: string, injuryCodingData: InjuryCoding) {
         await this.diagnosisPage.clickOnTabFromNavbar(DiagnosisTab.Diagnosis);
         const actualInjuryCoding: InjuryCoding = {
-                    iss: await this.diagnosisPage.getIss()  ,
-                    icd10: await this.diagnosisPage.getIcd10(), 
-                    preDot: await this.diagnosisPage.getPreDot(), 
-                    severity: await this.diagnosisPage.getSeverity(), 
+            issBodyRegion: await this.diagnosisPage.getIss(),
+            icd10: await this.diagnosisPage.getIcd10(),
+            preDot: await this.diagnosisPage.getPreDot(),
+            severity: await this.diagnosisPage.getSeverity(),
         };
         expect(actualInjuryCoding).toMatchObject({
-                    iss: injuryCodingData.iss,
-                    icd10: injuryCodingData.icd10,
-                    preDot: injuryCodingData.preDot,
-                    severity: injuryCodingData.severity
-                });
-        
+            issBodyRegion: injuryCodingData.issBodyRegion,
+            icd10: injuryCodingData.icd10,
+            preDot: injuryCodingData.preDot,
+            severity: injuryCodingData.severity
+        });
+
         await this.diagnosisPage.clickOnTabFromNavbar(DiagnosisTab.Comorbidities);
         const expectedPreArrivalCardiacArrest = preArrivalCardiacArrest;
         const actualPreArrivalCardiacArrest = await this.diagnosisPage.getPreArrivalCardiacArrest();

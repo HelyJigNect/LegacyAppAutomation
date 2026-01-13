@@ -37,6 +37,7 @@ export class QaTrackingPage extends RegistriesPage {
     private qaItemDescriptionInputOfQaTrackingSpeedScreen = `//di-code-and-description-field[@field-information-name="Trauma.Issues.CURRENT.Code"]//input[@di-desc-input-element]`
     private optionOfQaItemCodeInputFromQaTrackingSpeedScreen = (optionValue: string) => `//ul[@di-append-to-body="Trauma.Issues.CURRENT.Code"]//span[contains(text(),'${optionValue}')]`
     private parentOptionOfOptionOfQaItemCodeInputFromQaTrackingSpeedScreen = (optionValue: string) => `//span[text()='${optionValue}']/ancestor::li/preceding-sibling::li[.//span[contains(@class,'glyphicon-folder-open')]][1]//span[@class='code-option-template-span ng-binding']`
+   
     async clickOnTabOfSubNavbarOfQaTracking(tabName: string): Promise<void> {
         await this.clickElement(this.tabOfSubNavbarOfQaTracking(tabName));
     }
@@ -167,4 +168,13 @@ export class QaTrackingPage extends RegistriesPage {
     async getAllQaItemFromQaTrackingTable(): Promise<string[]> {
         return this.getTextFromListOfElement(this.qaItemCellOfQaTrackingTable)
     }
+
+
+    //  async populateICD10ProcedureCodeFieldOfProceduresSpeedScreen(optionCode: string): Promise<void> {
+    //     await this.fillInput(this.icd10CodeInput, '')
+    //     await this.clickElement(this.icd10CodeInput);
+    //     await this.typeUsingKeyboard(optionCode);
+    //     await this.page.keyboard.press('Enter');
+    //     await this.page.waitForTimeout(500);
+    // }
 }

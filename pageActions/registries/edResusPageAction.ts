@@ -33,13 +33,16 @@ export class EdResusPageAction {
         expect(await this.edResusPage.isFormDisplayed('Vitals Information'), 'Vitals Information form is not displayed').toBeTruthy();
         await this.edResusPage.populateFieldOfVitalsTab(vitalsData);
 
-        await this.edResusPage.clickOnTabFromNavbar(EdResusTab.LabsToxicology);
+        if (process.env.ENV === 'dev') {
+            await this.edResusPage.clickOnTabFromNavbar('Labs/Toxicology/Screenings');
+        } else { await this.edResusPage.clickOnTabFromNavbar(EdResusTab.LabsToxicology); }
+
         expect(await this.edResusPage.isFormDisplayed('Alcohol'), 'Alcohol form is not displayed').toBeTruthy();
         await this.edResusPage.populateFieldOfAlcoholForm(alcoholData);
     }
 
     //validation
-    async verifyEdResusTab(arrivalData: Arrival, initialAssessment: InitialAssessment, vitals:Vitals, alcoholData: Alcohol) {
+    async verifyEdResusTab(arrivalData: Arrival, initialAssessment: InitialAssessment, vitals: Vitals, alcoholData: Alcohol) {
         // ---------------------- ARRIVAL / ADMISSION ----------------------
         await this.edResusPage.clickOnTabFromNavbar(EdResusTab.EDResus);
         const actualArrival: Arrival = {
@@ -57,7 +60,7 @@ export class EdResusPageAction {
             responseLevelCode: await this.edResusPage.getResponseLevelCode(),
             responseLevelDescription: await this.edResusPage.getResponseLevelDescription(),
             responseActivationDate: await this.edResusPage.getResponseActivationDate(),
-            responseActivationTime: await this.edResusPage.getResponseActivationTime()  
+            responseActivationTime: await this.edResusPage.getResponseActivationTime()
         };
         expect(actualArrival).toEqual(arrivalData);
 
@@ -88,17 +91,19 @@ export class EdResusPageAction {
             supplementalO2: await this.edResusPage.getSupplementalO2(),
             eye: await this.edResusPage.getGcsEye(),
             verbal: await this.edResusPage.getGcsVerbal(),
-            motor: await this.edResusPage.getGcsMotor(),           
+            motor: await this.edResusPage.getGcsMotor(),
             warmingMeasuresCode: '',
             warmingMeasuresDescription: ''
         };
         await this.edResusPage.clickOnTabFromNavbar(EdResusTab.Vitals);
         actualVitals.warmingMeasuresCode = await this.edResusPage.getWarmingMeasuresCode(),
-        actualVitals.warmingMeasuresDescription = await this.edResusPage.getWarmingMeasuresDescription()
+            actualVitals.warmingMeasuresDescription = await this.edResusPage.getWarmingMeasuresDescription()
         expect(actualVitals).toEqual(vitals);
 
         // ---------------------- LABS / ALCOHOL ----------------------
-        await this.edResusPage.clickOnTabFromNavbar(EdResusTab.LabsToxicology);
+        if (process.env.ENV === 'dev') {
+            await this.edResusPage.clickOnTabFromNavbar('Labs/Toxicology/Screenings');
+        } else { await this.edResusPage.clickOnTabFromNavbar(EdResusTab.LabsToxicology); }
         const actualAlcohol: Alcohol = {
             alcoholUseIndicator: await this.edResusPage.getAlcoholUseIndicator(),
             clinicianAdministered: await this.edResusPage.getClinicianAdministered()

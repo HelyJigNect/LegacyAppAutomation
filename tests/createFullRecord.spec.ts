@@ -2,7 +2,6 @@ import { test } from '../fixtures/fixtures';
 import { RecordInfoData } from '../dataFactory/trauma/demographic/recordInfoData';
 import { TraumaData } from '../dataFactory/trauma/traumaData';
 import { PatientData } from '../dataFactory/trauma/demographic/patientData';
-import { InjuryInfoData } from '../dataFactory/trauma/injury/injuryInfoData';
 import { MechanismOfInjuryData } from '../dataFactory/trauma/injury/mechanismOfInjuryData';
 import { SceneTransportData } from '../dataFactory/trauma/prehospital/sceneTransportData';
 import { ReferralHistoryData } from '../dataFactory/trauma/referringFacility/referralHistoryData';
@@ -14,6 +13,7 @@ import { InitialAssessmentData } from '../dataFactory/trauma/edResus/initialAsse
 import { LabsToxicologyData } from '../dataFactory/trauma/edResus/labsToxicologyData';
 import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
 import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locationServiceData';
+import { InjuryInfoData } from '../dataFactory/trauma/injury/injuryInfoData';
 
 const fullRecordCreation_LastName = "Test create record 1"
 test.describe('Create record', () => {
@@ -77,7 +77,7 @@ test.describe('Create record', () => {
 
     // ---------------- DIAGNOSIS ----------------
     await test.step('Populate forms of the Diagnosis tab', async () => {
-      injuryCodingData.iss = await diagnosisPageAction.populateTheFormOfDiagnosisTab(preArrivalCardiacArrest, injuryCodingData);
+      injuryCodingData.issBodyRegion = await diagnosisPageAction.populateTheFormOfDiagnosisTab(preArrivalCardiacArrest, injuryCodingData);
     })
 
     // ---------------- OUTCOME ----------------    

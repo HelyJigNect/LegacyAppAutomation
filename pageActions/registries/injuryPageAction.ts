@@ -5,6 +5,7 @@ import { InjuryTypeOptions, MechanismOfInjury } from "../../dataObjects/trauma/i
 import { InjuryInformationMandatoryField } from "../../data/enum/injury/injuryInformation";
 import { ECodesMandatoryField } from "../../data/enum/injury/mechanismOfInjury";
 import { InjuryTab } from "../../data/enum/tabNames";
+import { DropDownOption } from "../../dataObjects/dropdownOption";
 
 export class InjuryPageAction {
 
@@ -14,7 +15,7 @@ export class InjuryPageAction {
         this.injuryPage = new InjuryPage(page);
     }
 
-    async populateTheFormOfInjuryTab(injuryInfoData: InjuryInformation,eCodesData: MechanismOfInjury) {
+    async populateTheFormOfInjuryTab(injuryInfoData: InjuryInformation, eCodesData: MechanismOfInjury) {
         await this.injuryPage.clickOnTabFromNavbar(InjuryTab.Injury);
         expect(await this.injuryPage.isFormDisplayed('Injury Information'), 'Injury Information form is not displayed').toBeTruthy();
         await this.injuryPage.populateFieldOfInjuryInformationForm(injuryInfoData);
@@ -34,9 +35,9 @@ export class InjuryPageAction {
             restraints: await this.injuryPage.getRestraints(),
             airbags: await this.injuryPage.getAirbags(),
             equipment: await this.injuryPage.getEquipment(),
-            workRelated: await this.injuryPage.getWorkRelated(),    
-            domesticViolence: await this.injuryPage.getDomesticViolence(), 
-            reportOfPhysicalAbuse: await this.injuryPage.getReportOfPhysicalAbuse() 
+            workRelated: await this.injuryPage.getWorkRelated(),
+            domesticViolence: await this.injuryPage.getDomesticViolence(),
+            reportOfPhysicalAbuse: await this.injuryPage.getReportOfPhysicalAbuse()
         };
         expect(actualInjuryInfo).toEqual(injuryInfo);
 
@@ -58,6 +59,21 @@ export class InjuryPageAction {
     async verifyInjuryMandatoryFields(availableFieldValidation: { field: string; message: string }[]) {
         expect(await this.injuryPage.verifyFieldValidationIsNotPresent(availableFieldValidation, InjuryInformationMandatoryField)).toBeTruthy();
         expect(await this.injuryPage.verifyFieldValidationIsNotPresent(availableFieldValidation, ECodesMandatoryField)).toBeTruthy();
+    }
+
+    async navigateToMechanismOfInjuryAndVerifyTheOptionCode(icd10MechanismOption: DropDownOption[], activityCodeICD10Option: { code: string, description: string }) {
+        await this.injuryPage.clickOnTabFromNavbar(InjuryTab.Injury);
+        expect(await this.injuryPage.isFormDisplayed('Injury Information'), 'Injury Information form is not displayed').toBeTruthy();
+        await this.injuryPage.clickOnTabFromNavbar(InjuryTab.MechanismOfInjury);
+        expect(await this.injuryPage.isFormDisplayed('E-Codes'), 'E-Codes form is not displayed').toBeTruthy();
+        await this.injuryPage.populateICD10MechanismField(icd10MechanismOption);
+
+        expect(await this.injuryPage.getPrimaryICD10Mechanism()).toEqual(`${icd10MechanismOption[0].code}, ${icd10MechanismOption[0].shortDescription}`);
+        expect(await this.injuryPage.getSecondaryICD10Mechanism()).toEqual(`${icd10MechanismOption[1].code}, ${icd10MechanismOption[1].shortDescription}`);
+        expect(await this.injuryPage.getTertiaryICD10Mechanism()).toEqual(`${icd10MechanismOption[2].code}, ${icd10MechanismOption[2].shortDescription}`);
+
+        await this.injuryPage.populateActivityCodeICD10CodeField(activityCodeICD10Option.code);
+        expect(await this.injuryPage.getActivityCodeICD10Code()).toEqual(`${activityCodeICD10Option.code}, ${activityCodeICD10Option.description}`);
     }
 
 }

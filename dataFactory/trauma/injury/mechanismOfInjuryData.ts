@@ -1,4 +1,6 @@
-import { InjuryTypeOptions, MechanismOfInjury, DisasterCasualtyOptions, InjuryMechanismOptions } from "../../../dataObjects/trauma/injury/mechanismOfInjury";
+import { DropDownOption } from "../../../dataObjects/dropdownOption";
+import { DisasterCasualtyOptions, InjuryMechanismOptions, InjuryTypeOptions, MechanismOfInjury } from "../../../dataObjects/trauma/injury/mechanismOfInjury";
+import { DropDownOptionData } from "../../dropdownOptionData";
 
 export class MechanismOfInjuryData {
     static getECodesData(): MechanismOfInjury {
@@ -75,5 +77,9 @@ export class MechanismOfInjuryData {
             { code: '?', description: 'Unknown' },
         );
         return injuryMechanismOptions;
+    }
+
+    static getICD10MechanismOptionData(count: number = 1, desc?: string): DropDownOption[] {
+        return DropDownOptionData.getDropDownOptionData('data/Book1.xlsx', 'injury classification crosswalk', count, desc);
     }
 }

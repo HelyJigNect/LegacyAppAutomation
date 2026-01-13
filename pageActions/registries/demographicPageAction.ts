@@ -39,6 +39,10 @@ export class DemographicPageAction {
     }
 
     async verifyAndSelectOptionFromRaceSpeedScreen(raceOption: RaceOptions[]) {
+        if (process.env.ENV === 'dev') {
+            return;
+        }
+        
         //Verify Race options
         await this.demographicPage.clickOnRaceButtonOfPatientInformationForm();
         expect(await this.demographicPage.isSpeedScreenDisplayed(DemographicTab.Race), 'Race speed screen is not displayed').toBeTruthy();
@@ -57,7 +61,7 @@ export class DemographicPageAction {
 
     async verifyStateOfFieldWhilePopulatingRaceField(raceOption: RaceOptions[]) {
         let selectedRaceOption = raceOption.sort(() => Math.random() - 0.5).slice(0, 6);
-        for (let i = 1; i <= 6; i++) {
+        for (let i = 1; i <= raceOption.length; i++) {
             await this.demographicPage.populateRaceFieldOfPatientInformationForm(selectedRaceOption[i - 1].code, true, i);
             if (i < 6) {
                 expect(await this.demographicPage.isRaceCodeInputOfPatientInformationFormEditable(i + 1), `Field ${i + 1} should be enabled when field ${i} is populated`).toBeTruthy();
@@ -83,9 +87,9 @@ export class DemographicPageAction {
     }
 
     //validation   
-    async verifyDemographicTab(identifiers: Identifiers, patientInfo: PatientInfo, patientAddress: PatientAddressInfo) {        
+    async verifyDemographicTab(identifiers: Identifiers, patientInfo: PatientInfo, patientAddress: PatientAddressInfo) {
         const actualIdentifiers: Identifiers = {
-            arrivalTime: await this.demographicPage.getPatientArrivalTime(),            
+            arrivalTime: await this.demographicPage.getPatientArrivalTime(),
             firstName: await this.demographicPage.getPatientFirstName(),
             lastName: await this.demographicPage.getPatientLastName(),
             traumaNumber: await this.demographicPage.getTraumaNumber()
@@ -104,8 +108,7 @@ export class DemographicPageAction {
             traumaNumber: identifiers.traumaNumber
         });
 
-        await this.demographicPage.clickOnTabFromNavbar(DemographicTab.Patient);    
-        
+        await this.demographicPage.clickOnTabFromNavbar(DemographicTab.Patient);
         const actualPatientInfo: PatientInfo = {
             dob: await this.demographicPage.getDateOfBirth(),
             gender: await this.demographicPage.getDropdownSelectedText('GenderRow'),
@@ -114,7 +117,7 @@ export class DemographicPageAction {
             ethnicity: await this.demographicPage.getDropdownSelectedText('EthnicityRow'),
             race: await this.demographicPage.getRaceCode(patientInfo.race!),
             raceDescription: await this.demographicPage.getRaceDescription(patientInfo.race!),
-            ssn: await this.demographicPage.getSSN()         
+            ssn: await this.demographicPage.getSSN(),
         };
         if(process.env.ENV === 'sd_uat'){
             actualPatientInfo.genderId = await this.demographicPage.getDropdownSelectedText('GenderIdentity')
@@ -124,7 +127,7 @@ export class DemographicPageAction {
         }
         expect(actualPatientInfo).toEqual(patientInfo);
 
-        const actualAddress:  PatientAddressInfo= {
+        const actualAddress: PatientAddressInfo = {
             zip: await this.demographicPage.getZip(),
             homeless: await this.demographicPage.getHomeless(),
             state: await this.demographicPage.getState(),

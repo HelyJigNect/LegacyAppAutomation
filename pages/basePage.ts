@@ -10,28 +10,11 @@ export class BasePage extends Helpers {
     private loader = `//div[@class="ag-overlay-panel"]//span[text()='Loading...']`
 
     async waitForLoaderIconToDisappear(timeout: number = 10000): Promise<void> {
-        let loaderLocator = this.page.locator(this.loaderIcon);
-
-        for (let i = 0; i < 2; i++) {
-            const count = await loaderLocator.count();
-            if (count > 0 && await loaderLocator.first().isVisible()) {
-                await loaderLocator.first().waitFor({ state: 'hidden', timeout });
-                return;
-            }
-            await this.page.waitForTimeout(200);
-        }
+        await this.waitForElementToDisappear(this.loaderIcon, timeout);
     }
 
     async waitForLoaderToDisappear(timeout: number = 10000): Promise<void> {
-        let loaderLocator = this.page.locator(this.loader);
-
-        for (let i = 0; i < 2; i++) {
-            const count = await loaderLocator.count();
-            if (count > 0 && await loaderLocator.first().isVisible()) {
-                await loaderLocator.first().waitFor({ state: 'hidden', timeout });
-                return;
-            }
-            await this.page.waitForTimeout(200);
-        }
+        await this.waitForElementToDisappear(this.loader, timeout);
     }
+
 }

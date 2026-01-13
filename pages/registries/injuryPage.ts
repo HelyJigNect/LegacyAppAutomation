@@ -1,8 +1,8 @@
 import { Page } from "@playwright/test";
+import { DropDownOption } from "../../dataObjects/dropdownOption";
 import { InjuryInformation } from "../../dataObjects/trauma/injury/injuryInformation";
 import { MechanismOfInjury } from "../../dataObjects/trauma/injury/mechanismOfInjury";
 import { RegistriesPage } from "./registriesPage";
-import { InjuryTab } from "../../data/enum/tabNames";
 
 export class InjuryPage extends RegistriesPage {
     constructor(page: Page) {
@@ -41,14 +41,16 @@ export class InjuryPage extends RegistriesPage {
 
     private injuryMechanismDropdown = `//di-code-and-description-field[@field-information-name="Trauma.InjuryMechanisms.0.Code"]//div[@auto-close="disabled"]/input`
     private injuryMechanismDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.InjuryMechanisms.0.Code"]//div[@auto-close="disabled"]//following-sibling::input`
-    private optionOfInjuryMechanismDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.InjuryMechanisms.0.Code"]//span[contains(text(),', ${optionValue}')]`    
+    private optionOfInjuryMechanismDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.InjuryMechanisms.0.Code"]//span[contains(text(),', ${optionValue}')]`
     private disasterCasualtyDropdown = `//di-code-and-description-field[@field-information-name="Trauma.CasualtyType"]//div[@auto-close="disabled"]/input`
     private disasterCasualtyDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.CasualtyType"]//div[@auto-close="disabled"]//following-sibling::input`
-    private optionOfDisasterCasualtyDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.CasualtyType"]//span[contains(text(),', ${optionValue}')]` 
+    private optionOfDisasterCasualtyDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.CasualtyType"]//span[contains(text(),', ${optionValue}')]`
 
     private injuryTypeInput = `//di-code-and-description-field[@field-information-name="Trauma.InjuryTypes.0.Code"]//div[contains(@class,'dropdown')]/input`
     private injuryTypeDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.InjuryTypes.0.Code"]//input[@title]`
-    private injuryTypeDropdown = (optionValue: string) =>`//ul[contains(@di-append-to-body,'Trauma.InjuryTypes.0.Code')]//span[contains(text(),'${optionValue}')]`
+    private injuryTypeDropdown = (optionValue: string) => `//ul[contains(@di-append-to-body,'Trauma.InjuryTypes.0.Code')]//span[contains(text(),'${optionValue}')]`
+    private activityCodeICD10DropDown = `//di-code-and-description-field[@field-information-name="Trauma.Icd10EtiologyActivityCode"]//div[@uib-dropdown]`
+    private activityCodeICD10dropdownOptionLoader = `//ul[@di-append-to-body="Trauma.Icd10EtiologyActivityCode"]//div[contains(text(),'Loading Options...')]`;
 
     async populateFieldOfInjuryInformationForm(injuryInfoData: InjuryInformation): Promise<void> {
         await this.fillInput(this.injuryDate, injuryInfoData.injuryDate)
@@ -68,19 +70,38 @@ export class InjuryPage extends RegistriesPage {
         }
     }
 
-    async populateFieldOfECodesForm(eCodesData: MechanismOfInjury): Promise<void> {     
-        await this.page.keyboard.press('Escape'); 
-        await this.scrollAndSelectDropdownOption(this.primaryICD10MechanismDropdown, this.optionOfPrimaryICD10MechanismDropdown(eCodesData.primaryICD10Mechanism))  
-        await this.page.keyboard.press('Escape'); 
+    async populateFieldOfECodesForm(eCodesData: MechanismOfInjury): Promise<void> {
+        await this.page.keyboard.press('Escape');
+        await this.scrollAndSelectDropdownOption(this.primaryICD10MechanismDropdown, this.optionOfPrimaryICD10MechanismDropdown(eCodesData.primaryICD10Mechanism))
+        await this.page.keyboard.press('Escape');
         await this.clickElement(this.injuryTypeInput);
-        await this.clickElement(this.injuryTypeDropdown(eCodesData.injuryTypeCode!));   
-        await this.page.keyboard.press('Escape');   
+        await this.clickElement(this.injuryTypeDropdown(eCodesData.injuryTypeCode!));
+        await this.page.keyboard.press('Escape');
         switch (process.env.ENV) {
             case 'sd_uat':
                 await this.scrollAndSelectDropdownOption(this.injuryMechanismDropdown, this.optionOfInjuryMechanismDropdown(eCodesData.injuryMechanismDescription!))
                 await this.scrollAndSelectDropdownOption(this.disasterCasualtyDropdown, this.optionOfDisasterCasualtyDropdown(eCodesData.disasterCasualtyDescription!))
-                break;            
-        }       
+                break;
+        }
+    }
+
+    async populateICD10MechanismField(optionDetails: DropDownOption[]): Promise<void> {
+        let i = 0;
+        for (const field of [this.primaryICD10MechanismDropdown, this.secondaryICD10MechanismDropdown, this.tertiaryICD10MechanismDropdown]) {
+            await this.clickElement(field);
+            await this.typeUsingKeyboard(optionDetails[i].code);
+            await this.page.keyboard.press('Enter');
+            await this.page.waitForTimeout(500);
+            await this.clickElement(`${field}/..//input[@di-desc-input-element]`, true)
+            i++;
+        }
+    }
+
+    async populateActivityCodeICD10CodeField(optionCode: string): Promise<void> {
+        await this.clickElement(this.activityCodeICD10DropDown);
+        await this.typeUsingKeyboard(optionCode);
+        await this.page.keyboard.press('Enter');
+        await this.waitForElementToDisappear(this.activityCodeICD10dropdownOptionLoader, 15000);
     }
 
     //getter methods
@@ -129,17 +150,22 @@ export class InjuryPage extends RegistriesPage {
     }
 
     async getPrimaryICD10Mechanism() {
-        const value =  await this.getValue('dropdown', 'PrimaryICD10MechanismRow');
+        const value = await this.getValue('dropdown', 'PrimaryICD10MechanismRow');
         return value.replace(/^\?,\s*/i, '').trim();
     }
 
     async getSecondaryICD10Mechanism() {
-        const value =  await this.getValue('dropdown', 'SecondaryICD10MechanismRow');
+        const value = await this.getValue('dropdown', 'SecondaryICD10MechanismRow');
         return value.replace(/^\?,\s*/i, '').trim();
     }
 
     async getTertiaryICD10Mechanism() {
-        const value =  await this.getValue('dropdown', 'TertiaryICD10MechanismRow');
+        const value = await this.getValue('dropdown', 'TertiaryICD10MechanismRow');
+        return value.replace(/^\?,\s*/i, '').trim();
+    }
+
+    async getActivityCodeICD10Code() {
+        const value = await this.getValue('dropdown', 'ActivityCodeICD10Row');
         return value.replace(/^\?,\s*/i, '').trim();
     }
 

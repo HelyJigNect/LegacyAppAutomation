@@ -1,6 +1,8 @@
 import { Page } from "@playwright/test";
 import { QaTrackingPage } from "../../pages/registries/qaTrackingPage";
 import { expect } from "../../fixtures/fixtures";
+import { QATrackingTab } from "../../data/enum/tabNames";
+import { DropDownOption } from "../../dataObjects/dropdownOption";
 
 export class QaTrackingPageAction {
     private qaTrackingPage: QaTrackingPage
@@ -54,6 +56,75 @@ export class QaTrackingPageAction {
             }
         }
 
+        await this.qaTrackingPage.clickOnButtonOfSpeedScreen('QA Tracking', 'OK')
+        expect(await this.qaTrackingPage.getAllQaItemFromQaTrackingTable(), 'Qa items in Qa tracking table are not as expected').toEqual(qaItemOptionsHierarchy.map(option => option[option.length - 1]));
+    }
+
+    async navigateToQaTrackingTabAndVerifyTheICD10Options(ICD10Options: DropDownOption[]) {
+        await this.qaTrackingPage.clickOnTabFromNavbar(QATrackingTab.QATracking);
+        await this.qaTrackingPage.clickOnTabOfSubNavbarOfQaTracking(QATrackingTab.QATracking);
+        await this.qaTrackingPage.clickOnButtonOfQaTrackingTab('Add')
+        expect(await this.qaTrackingPage.isSpeedScreenDisplayed('QA Tracking'), 'QA Tracking speed screen is not displayed').toBeTruthy();
+
+        for (const option of ICD10Options) {
+            await this.qaTrackingPage.populateQaItemFieldOfQaTrackingSpeedScreen(option.code);
+            expect(await this.qaTrackingPage.getQaItemDescriptionInputValueOfQaTrackingSpeedScreen(), `ICD10 Description for code ${option.code} is not as expected`).toEqual(`${option.code}, ${option.shortDescription}`);
+        }
+    }
+
+    async selectOptionOfExplicitNegativesSpeedScreenAndVerifyCheckboxState(qaItemsDetails: string[]) {
+        await this.qaTrackingPage.clickOnButtonOfQaItemsTab('Explicit Negatives')
+        expect(await this.qaTrackingPage.isSpeedScreenDisplayed('Explicit Negatives'), 'Explicit Negatives speed screen is not displayed').toBeTruthy();
+        for (const qaItem of qaItemsDetails) {
+            await this.qaTrackingPage.clickOnNotKnownCheckboxOfOptionOfExplicitNegativesSpeedScreen(qaItem)
+        }
+        await this.qaTrackingPage.clickOnButtonOfSpeedScreen('Explicit Negatives', 'OK')
+        await this.qaTrackingPage.clickOnButtonOfQaItemsTab('Explicit Negatives')
+        expect(await this.qaTrackingPage.isSpeedScreenDisplayed('Explicit Negatives'), 'Explicit Negatives speed screen is not displayed').toBeTruthy();
+        for (const qaItem of qaItemsDetails) {
+            expect(await this.qaTrackingPage.isCheckboxOfOptionOfExplicitNegativesSpeedScreenChecked(qaItem), `Checkbox of option: ${qaItem} is checked`).toBeFalsy()
+            expect(await this.qaTrackingPage.isCheckboxOfOptionOfExplicitNegativesSpeedScreenEnabled(qaItem), `Checkbox of option: ${qaItem} is enabled`).toBeFalsy()
+            expect(await this.qaTrackingPage.isNotKnownCheckboxOfOptionOfExplicitNegativesSpeedScreenEnabled(qaItem), `Not Known checkbox of option: ${qaItem} is not checked`).toBeTruthy()
+            expect(await this.qaTrackingPage.isNotKnownCheckboxOfOptionOfExplicitNegativesSpeedScreenChecked(qaItem), `Not Known checkbox of option: ${qaItem} is not enabled`).toBeTruthy()
+        }
+        await this.qaTrackingPage.clickOnButtonOfSpeedScreen('Explicit Negatives', 'OK')
+    }
+
+    async selectOptionOfNTDBSpeedScreenAndVerifyCheckboxStateOfExplicitNegativesSpeedScreen(qaItemsDetails: string[]) {
+        await this.qaTrackingPage.clickOnButtonOfQaItemsTab('NTDB Complications')
+        expect(await this.qaTrackingPage.isSpeedScreenDisplayed('NTDB'), 'NTDB speed screen is not displayed').toBeTruthy();
+        for (const qaItem of qaItemsDetails) {
+            await this.qaTrackingPage.clickOnCheckboxOfOptionOfNTDBSpeedScreen(qaItem)
+        }
+        await this.qaTrackingPage.clickOnButtonOfSpeedScreen('NTDB', 'OK')
+        const qaItemsOfQaItemsTable = await this.qaTrackingPage.getAvailableQaItemsOfQaItemsTable();
+        for (const qaItem of qaItemsDetails) {
+            expect(qaItemsOfQaItemsTable,'QA item details in table do not match expected values').toContain(qaItem);
+        }
+
+        await this.qaTrackingPage.clickOnButtonOfQaItemsTab('Explicit Negatives')
+        expect(await this.qaTrackingPage.isSpeedScreenDisplayed('Explicit Negatives'), 'Explicit Negatives speed screen is not displayed').toBeTruthy();
+        for (const qaItem of qaItemsDetails) {
+            expect(await this.qaTrackingPage.isCheckboxOfOptionOfExplicitNegativesSpeedScreenChecked(qaItem), `Checkbox of option: ${qaItem} is not checked`).toBeTruthy()
+            expect(await this.qaTrackingPage.isCheckboxOfOptionOfExplicitNegativesSpeedScreenEnabled(qaItem), `Checkbox of option: ${qaItem} is enabled`).toBeFalsy()
+            expect(await this.qaTrackingPage.isNotKnownCheckboxOfOptionOfExplicitNegativesSpeedScreenChecked(qaItem), `Not Known checkbox of option: ${qaItem} is checked`).toBeFalsy()
+            expect(await this.qaTrackingPage.isNotKnownCheckboxOfOptionOfExplicitNegativesSpeedScreenEnabled(qaItem), `Not Known checkbox of option: ${qaItem} is enabled`).toBeFalsy()
+        }
+        await this.qaTrackingPage.clickOnButtonOfSpeedScreen('Explicit Negatives', 'OK')
+    }
+
+    async navigateToQaTrackingTabAndVerifyTheQaItemOption(qaItemOptionsHierarchy: string[][]) {
+        await this.qaTrackingPage.clickOnTabOfSubNavbarOfQaTracking(QATrackingTab.QATracking);
+        await this.qaTrackingPage.clickOnButtonOfQaTrackingTab('Add')
+        expect(await this.qaTrackingPage.isSpeedScreenDisplayed('QA Tracking'), 'QA Tracking speed screen is not displayed').toBeTruthy();
+        for (const option of qaItemOptionsHierarchy) {
+            expect(await this.qaTrackingPage.isQaItemDropdownOptionHierarchyAsExpected(option)).toBeTruthy();
+            await this.qaTrackingPage.selectOptionForQaItemDropdownOfQaTrackingSpeedScreen(option)
+            expect(await this.qaTrackingPage.getQaItemDescriptionInputValueOfQaTrackingSpeedScreen(), 'Selected option for Qa Item dropdown is not as expected').toEqual(option[option.length - 1]);
+            if (option !== qaItemOptionsHierarchy[qaItemOptionsHierarchy.length - 1]) {
+                await this.qaTrackingPage.clickOnButtonOfSpeedScreen('QA Tracking', 'Add Another')
+            }
+        }
         await this.qaTrackingPage.clickOnButtonOfSpeedScreen('QA Tracking', 'OK')
         expect(await this.qaTrackingPage.getAllQaItemFromQaTrackingTable(), 'Qa items in Qa tracking table are not as expected').toEqual(qaItemOptionsHierarchy.map(option => option[option.length - 1]));
     }

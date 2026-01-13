@@ -30,8 +30,13 @@ export class PatientData {
         }
     }
 
-    static getRaceOption(): RaceOptions[] {
+    static getRaceOption(raceOption?: [string, string][]): RaceOptions[] {
         const raceOptions: RaceOptions[] = [];
+
+        if (raceOption?.length) {
+            return raceOption.map(([code, description]) => ({ code, description }));
+        }
+
         raceOptions.push(
             { code: '1', description: 'American Indian' },
             { code: '2', description: 'Asian' },
