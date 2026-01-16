@@ -19,7 +19,7 @@ export class PatientData {
             ssn: faker.helpers.replaceSymbols('###-##-####')
         }
 
-        if (process.env.ENV === 'dev') {
+        if (process.env.ENV === 'dev' || process.env.ENV === 'md_uat') {
             patientData.ssn = '';
         }
 

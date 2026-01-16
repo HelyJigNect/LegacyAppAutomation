@@ -16,8 +16,7 @@ export class InitialDischargeData {
         let dischargedTo;
         switch (process.env.ENV) {
             case 'il_uat':
-                dischargedTo = 'Home or Self Care (Routine Discharge)'
-                break;
+            case 'sd_uat':
             case 'sd_uat':
                 dischargedTo = 'Home or Self Care (Routine Discharge)'
                 break;

@@ -47,6 +47,10 @@ export class HomePage extends BasePage {
         selector = this.pageHeadingWithNormalizeSpace("Kansas UAT v5 Trauma Gen 6");
         break;
 
+      case 'md_uat':
+        selector = this.pageHeadingWithNormalizeSpace("Maryland UAT v5 Trauma Gen 6");
+        break;
+
       default:
         selector = this.pageHeading("SS DEV Gen 6");
     }

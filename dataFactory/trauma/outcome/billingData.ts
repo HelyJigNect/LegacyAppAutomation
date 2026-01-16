@@ -5,9 +5,8 @@ export class BillingData {
         let primaryPayor
         switch (process.env.ENV) {
             case 'il_uat':
-                primaryPayor = 'Self Pay'
-                break;
             case 'sd_uat':
+            case 'md_uat':
                 primaryPayor = 'Self Pay'
                 break;
 

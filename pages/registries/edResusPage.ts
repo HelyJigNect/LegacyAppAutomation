@@ -16,6 +16,7 @@ export class EdResusPage extends RegistriesPage {
     private edDepartureOrderTimeInput = `//di-time-input[@field-information-name="Trauma.EdDepartureOrderTime"]//input`
 
     private primaryMedicalEventDropdown = `//di-code-and-description-field[@field-information-name="Trauma.PrimaryMedicalEvent"]//div[@uib-dropdown]`
+    private primaryMedicalEventDescription = `//di-code-and-description-field[@field-information-name="Trauma.PrimaryMedicalEvent"]//div[@uib-dropdown]/..//input[@di-desc-input-element]`
     private optionOfPrimaryMedicalEventDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.PrimaryMedicalEvent"]//span[contains(text(),', ${optionValue}')]`
     private signsOfLifeDropdown = `//di-code-and-description-field[@field-information-name="Trauma.SignsOfLife"]//div[@uib-dropdown]`
     private optionOfSignsOfLifeDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.SignsOfLife"]//span[contains(text(),', ${optionValue}')]`
@@ -138,6 +139,9 @@ export class EdResusPage extends RegistriesPage {
     //getter methods
     // ARRIVAL / ADMISSION
     async getPrimaryMedicalEvent() {
+        if(process.env.ENV === 'md_uat'){
+            return this.getValue('text', this.primaryMedicalEventDescription);
+        }
         return this.getValue('dropdown', 'PrimaryMedicalEventRow');
     }
 

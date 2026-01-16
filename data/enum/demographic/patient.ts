@@ -18,6 +18,7 @@ let PatientInformationMandatoryField: { field: string; message: string }[] = [
     message: 'Gender-Affirming Hormone Therapy should not be blank'
   },
   { field: 'Ethnicity', message: 'Ethnicity should not be blank' },
+  { field: 'Race 1', message: 'Race should not be blank' },
 ];
 
 switch (process.env.ENV) {
@@ -30,7 +31,14 @@ switch (process.env.ENV) {
     PatientInformationMandatoryField = [{
       field: 'Gender-Affirming Hormone Therapy',
       message: 'Gender-Affirming Hormone Therapy should not be blank'
-    },];
+    }];
+    break;
+  case 'md_uat':
+    PatientInformationMandatoryField.forEach(item => {
+      if (item.field === 'Gender Identity') {
+        item.message = 'Gender Identity cannot be left blank';
+      }
+    });
     break;
 }
 
