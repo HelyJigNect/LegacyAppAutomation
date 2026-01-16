@@ -22,6 +22,6 @@ export interface Vitals {
     eye: string
     verbal: string
     motor: string,
-    warmingMeasuresCode: string
-    warmingMeasuresDescription: string
+    warmingMeasuresCode?: string
+    warmingMeasuresDescription?: string
 }

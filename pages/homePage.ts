@@ -22,7 +22,7 @@ export class HomePage extends BasePage {
       case 'al_uat':
         selector = this.pageHeading("AL UAT  Gen 6");
         break;
-   
+
       case 'il_uat':
         selector = this.pageHeading("IL UAT Web Registry and C/S");
         break;
@@ -41,6 +41,10 @@ export class HomePage extends BasePage {
 
       case 'sd_uat':
         selector = this.pageHeadingWithNormalizeSpace("SD UAT Gen 6");
+        break;
+
+      case 'ks_uat':
+        selector = this.pageHeadingWithNormalizeSpace("Kansas UAT v5 Trauma Gen 6");
         break;
 
       default:

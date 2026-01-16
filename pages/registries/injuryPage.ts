@@ -71,12 +71,9 @@ export class InjuryPage extends RegistriesPage {
     }
 
     async populateFieldOfECodesForm(eCodesData: MechanismOfInjury): Promise<void> {
-        await this.page.keyboard.press('Escape');
         await this.scrollAndSelectDropdownOption(this.primaryICD10MechanismDropdown, this.optionOfPrimaryICD10MechanismDropdown(eCodesData.primaryICD10Mechanism))
-        await this.page.keyboard.press('Escape');
         await this.clickElement(this.injuryTypeInput);
         await this.clickElement(this.injuryTypeDropdown(eCodesData.injuryTypeCode!));
-        await this.page.keyboard.press('Escape');
         switch (process.env.ENV) {
             case 'sd_uat':
                 await this.scrollAndSelectDropdownOption(this.injuryMechanismDropdown, this.optionOfInjuryMechanismDropdown(eCodesData.injuryMechanismDescription!))

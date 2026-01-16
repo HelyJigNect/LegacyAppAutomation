@@ -1,24 +1,23 @@
-import { expect, test } from '../fixtures/fixtures';
-import { RecordInfoData } from '../dataFactory/trauma/demographic/recordInfoData';
-import { TraumaData } from '../dataFactory/trauma/traumaData';
 import { PatientData } from '../dataFactory/trauma/demographic/patientData';
-import { InjuryInfoData } from '../dataFactory/trauma/injury/injuryInfoData';
-import { MechanismOfInjuryData } from '../dataFactory/trauma/injury/mechanismOfInjuryData';
-import { SceneTransportData } from '../dataFactory/trauma/prehospital/sceneTransportData';
-import { ReferralHistoryData } from '../dataFactory/trauma/referringFacility/referralHistoryData';
-import { InitialDischargeData } from '../dataFactory/trauma/outcome/initialDischargeData';
-import { BillingData } from '../dataFactory/trauma/outcome/billingData';
+import { RecordInfoData } from '../dataFactory/trauma/demographic/recordInfoData';
 import { ComorbiditiesData } from '../dataFactory/trauma/diagnosis/comorbiditiesData';
+import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
 import { ArrivalData } from '../dataFactory/trauma/edResus/arrivalData';
 import { InitialAssessmentData } from '../dataFactory/trauma/edResus/initialAssessmentData';
 import { LabsToxicologyData } from '../dataFactory/trauma/edResus/labsToxicologyData';
-import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
+import { InjuryInfoData } from '../dataFactory/trauma/injury/injuryInfoData';
+import { MechanismOfInjuryData } from '../dataFactory/trauma/injury/mechanismOfInjuryData';
+import { BillingData } from '../dataFactory/trauma/outcome/billingData';
+import { InitialDischargeData } from '../dataFactory/trauma/outcome/initialDischargeData';
 import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locationServiceData';
+import { SceneTransportData } from '../dataFactory/trauma/prehospital/sceneTransportData';
+import { ReferralHistoryData } from '../dataFactory/trauma/referringFacility/referralHistoryData';
+import { TraumaData } from '../dataFactory/trauma/traumaData';
+import { expect, test } from '../fixtures/fixtures';
 
 const checkFieldValidation_LastName = "Field validation"
 test.describe('Field validation', () => {
-  test('Check field validation', async ({registriesPage, referringFacilityPage, registriesPageAction, demographicPageAction, injuryPageAction, prehospitalPageAction, referringFacilityPageAction, edResusPageAction, diagnosisPageAction, outcomePageAction, patientTrackingPageAction}, testInfo) => 
-  {
+  test('Check field validation', async ({ registriesPage, referringFacilityPage, registriesPageAction, demographicPageAction, injuryPageAction, prehospitalPageAction, referringFacilityPageAction, edResusPageAction, diagnosisPageAction, outcomePageAction, patientTrackingPageAction }, testInfo) => {
     testInfo.annotations.push({ type: 'testrail', description: 'C325052' });
     const traumaDetails = TraumaData.getTraumaData();
 
@@ -45,7 +44,6 @@ test.describe('Field validation', () => {
     const injuryInformation = InjuryInfoData.getInjuryInfoData(traumaDetails.arrivalDate);
     const eCodesData = MechanismOfInjuryData.getECodesData();
     await injuryPageAction.populateTheFormOfInjuryTab(injuryInformation, eCodesData);
-    await registriesPage.clickOnBtnOfPatientGrid('Check');
     availableFieldValidation = await referringFacilityPage.clickOnRecheckBtnAndGetListOfFieldValidationPresentInResultPopup();
     await injuryPageAction.verifyInjuryMandatoryFields(availableFieldValidation);
 
@@ -81,9 +79,7 @@ test.describe('Field validation', () => {
     const dischargeInformation = InitialDischargeData.getDischargeInformationData(patientArrivalDetails.edDepartureOrderDate);
     const billingData = BillingData.getBillingInfoData();
     await outcomePageAction.populateTheFormOfOutcomeTab(dischargeInformation, billingData);
-    await registriesPage.clickOnBtnOfPatientGrid('Check');
     availableFieldValidation = await referringFacilityPage.clickOnRecheckBtnAndGetListOfFieldValidationPresentInResultPopup();
-    referringFacilityPage.clickOnCancelButtonIfSpeedScreenDisplayed();
     await outcomePageAction.verifyOutcomeMandatoryFields(availableFieldValidation);
 
     // ---------------- PATIENT TRACKING ----------------
@@ -93,5 +89,9 @@ test.describe('Field validation', () => {
     await registriesPage.clickOnBtnOfPatientGrid('Check');
     availableFieldValidation = await referringFacilityPage.clickOnRecheckBtnAndGetListOfFieldValidationPresentInResultPopup();
     await patientTrackingPageAction.verifyPatientTrackingMandatoryFields(availableFieldValidation);
+
+    await test.step(`Save the trauma record`, async () => {
+      await registriesPageAction.saveTheTraumaRecord()
+    });
   });
 });

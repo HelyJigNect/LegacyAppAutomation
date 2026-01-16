@@ -1,8 +1,8 @@
-import { PatientTrackingPage } from "../../pages/registries/patientTrackingPage";
-import { LocationService } from "../../dataObjects/trauma/patientTracking/locationService";
 import { expect, Page } from "@playwright/test";
 import { LocationServiceMandatoryField } from "../../data/enum/patientTracking/locationService";
 import { PatientTrackingTab } from "../../data/enum/tabNames";
+import { LocationService } from "../../dataObjects/trauma/patientTracking/locationService";
+import { PatientTrackingPage } from "../../pages/registries/patientTrackingPage";
 
 export class PatientTrackingPageAction {
     private patientTrackingPage: PatientTrackingPage
@@ -15,7 +15,10 @@ export class PatientTrackingPageAction {
         if (process.env.ENV !== 'sd_uat') {
             await this.patientTrackingPage.clickOnTabFromNavbar(PatientTrackingTab.PatientTracking);
             expect(await this.patientTrackingPage.isFormDisplayed('Location Tracking'), 'Patient Tracking form is not displayed').toBeTruthy();
-            await this.patientTrackingPage.populateFieldOfLocationServiceForm(locationServiceData)
+            await this.patientTrackingPage.clickOnTheBtnOfLocationTracking('Add');
+            expect(await this.patientTrackingPage.isSpeedScreenDisplayed('Location Tracking'), 'Location Tracking speed screen is not displayed').toBeTruthy();
+            await this.patientTrackingPage.populateFieldOfLocationTrackingSpeedScreen(locationServiceData)
+            await this.patientTrackingPage.clickOnButtonOfSpeedScreen('Location Tracking', 'OK');
         }
     }
 

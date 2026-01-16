@@ -8,6 +8,6 @@ export interface DischargeInformation {
     dischargedTo: string;
     dischargeStatus: string;
     dischargeStatusDescription: string;
-    ImpedimentsToDischargeCode: string;
-    ImpedimentsToDischargeDescription: string;
+    ImpedimentsToDischargeCode?: string;
+    ImpedimentsToDischargeDescription?: string;
 }

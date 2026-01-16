@@ -1,4 +1,4 @@
-import { DemographicTab, ProceduresTab, TDPTab } from "../data/enum/tabNames";
+import { DemographicTab, ProceduresTab, QATrackingTab, TDPTab } from "../data/enum/tabNames";
 import { PatientData } from "../dataFactory/trauma/demographic/patientData";
 import { RecordInfoData } from "../dataFactory/trauma/demographic/recordInfoData";
 import { InjuryCodingData } from "../dataFactory/trauma/diagnosis/injuryCodingData";
@@ -59,8 +59,8 @@ test.describe('Form 45 - dropdown validations', () => {
             }
             await proceduresPageAction.addICD10ProcedureFromAddMultipleProcedureSpeedScreen(icd10OptionData)
 
-            // const icd10OptionsHierarchy = [['Retired Codes', 'Retired 2019', 'Upper Artery', '037Y046, Dilate Up Art, Bifurc, w Drug-elut Intra, Open (Ret 2019)'], ['Retired Codes', 'Retired 2019', 'Upper Artery', '037Y056, Dilation of Up Art, Bifurc, with 2 Drug-elut, Open Approach (Ret 2019)']]
-            // await proceduresPageAction.checkICD10DropDownOptionHierarchyFromAddMultipleProcedureSpeedScreen(icd10OptionsHierarchy)
+            const icd10OptionsHierarchy = [['Retired Codes', 'Retired 2019', 'Central Artery', '30260J0, Transfuse Autol Serum Albumin in Central Art, Open (Ret 2019)'], ['Retired Codes', 'Retired 2019', 'Central Artery', '30263J1, Transfuse Nonaut Serum Albumin in Central Art, Perc (Ret 2019)']]
+            await proceduresPageAction.checkICD10DropDownOptionHierarchyFromAddMultipleProcedureSpeedScreen(icd10OptionsHierarchy)
 
             icd10OptionData = ProceduresICD10Data.getProceduresICD10DataOptionData('procedure_April2025Change', 3, 'Retire', ' (Ret Oct 2024)');
             if (process.env.ENV === 'dev') {
@@ -72,7 +72,7 @@ test.describe('Form 45 - dropdown validations', () => {
         await test.step('Select and verify the ICD 10 code(PCS: April 2025 Changes) using the Procedures speed screen', async () => {
             let icd10OptionData = ProceduresICD10Data.getProceduresICD10DataOptionData('procedure_April2025Change', 3, 'All', ' (Ret Oct 2024)');
             if (process.env.ENV === 'dev') {
-                icd10OptionData = ProceduresICD10Data.getProceduresICD10DataOptionData('procedure_April2025Change', 3, 'Retire');
+                icd10OptionData = ProceduresICD10Data.getProceduresICD10DataOptionData('procedure_April2025Change', 3);
             }
             await proceduresPageAction.addICD10ProcedureUsingProceduresSpeedScreen(icd10OptionData)
         })
@@ -83,8 +83,8 @@ test.describe('Form 45 - dropdown validations', () => {
                 icd10OptionData = ProceduresICD10Data.getProceduresICD10DataOptionData('procedure_October2025Changes', 5);
             }
             await proceduresPageAction.addICD10ProcedureFromAddMultipleProcedureSpeedScreen(icd10OptionData)
-            // const icd10OptionsHierarchy = [['Retired Codes', 'Retired 2019', 'Upper Artery', '037Y046, Dilate Up Art, Bifurc, w Drug-elut Intra, Open (Ret 2019)'], ['Retired Codes', 'Retired 2019', 'Upper Artery', '037Y056, Dilation of Up Art, Bifurc, with 2 Drug-elut, Open Approach (Ret 2019)']]
-            // await proceduresPageAction.checkICD10DropDownOptionHierarchyFromProcedureSpeedScreen(icd10OptionsHierarchy)
+            const icd10OptionsHierarchy = [['Retired Codes', 'Retired 2019', 'Central Artery', '30260J0, Transfuse Autol Serum Albumin in Central Art, Open (Ret 2019)'], ['Retired Codes', 'Retired 2019', 'Central Artery', '30263J1, Transfuse Nonaut Serum Albumin in Central Art, Perc (Ret 2019)']]
+            await proceduresPageAction.checkICD10DropDownOptionHierarchyFromProcedureSpeedScreen(icd10OptionsHierarchy)
         })
 
         await test.step('Navigate To TDP tab and verify that nonexistent/invalid code cannot be entered and are not retained in the VTE Prophylaxis dropdown', async () => {
@@ -101,7 +101,7 @@ test.describe('Form 45 - dropdown validations', () => {
         })
 
         await test.step('Navigate To QA Tracking', async () => {
-            await registriesPageAction.navigateToTab('QA Tracking');
+            await registriesPageAction.navigateToTab(QATrackingTab.QATracking);
         })
 
         await test.step('Select option from the NTDB speed screen and verify the checkbox state of Explicit Negatives speed screen', async () => {
@@ -159,7 +159,7 @@ test.describe('Form 45 - dropdown validations', () => {
         })
 
         await test.step('Navigate To QA Tracking', async () => {
-            await registriesPageAction.navigateToTab('QA Tracking');
+            await registriesPageAction.navigateToTab(QATrackingTab.QATracking);
         })
 
         await test.step('Select option from the Explicit Negatives speed screen and verify the checkbox state', async () => {
@@ -187,7 +187,7 @@ test.describe('Form 45 - dropdown validations', () => {
         await test.step(`Trauma Number : ${traumaNumber} `, () => { })
 
         await test.step('Navigate To QA Tracking', async () => {
-            await registriesPageAction.navigateToTab('QA Tracking');
+            await registriesPageAction.navigateToTab(QATrackingTab.QATracking);
         })
 
         const qaItemsDetails = process.env.ENV === 'dev' ? ['Unplanned Return to OR (Site Specific)', `Unplanned Visit to the Operating Room (Retired 2026)`] : ['Unplanned Visit to the Operating Room', 'Unplanned Intubation'];

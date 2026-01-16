@@ -1,10 +1,10 @@
 import { expect, Page } from "@playwright/test";
-import { OutcomePage } from "../../pages/registries/outcomePage";
-import { DischargeInformation } from "../../dataObjects/trauma/outcome/initialDischarge";
-import { Billing } from "../../dataObjects/trauma/outcome/billing";
-import { DischargeInformationMandatoryField } from "../../data/enum/outcome/initialDischarge";
 import { BillingMandatoryField } from "../../data/enum/outcome/billing";
+import { DischargeInformationMandatoryField } from "../../data/enum/outcome/initialDischarge";
 import { OutcomeTab } from "../../data/enum/tabNames";
+import { Billing } from "../../dataObjects/trauma/outcome/billing";
+import { DischargeInformation } from "../../dataObjects/trauma/outcome/initialDischarge";
+import { OutcomePage } from "../../pages/registries/outcomePage";
 
 export class OutcomePageAction {
 
@@ -29,24 +29,27 @@ export class OutcomePageAction {
     async verifyOutcomeTab(dischargeInfo: DischargeInformation, billing: Billing) {
         await this.outcomePage.clickOnTabFromNavbar(OutcomeTab.Outcome);
         const actualDischargeInfo: DischargeInformation = {
-            dischargeOrderDate: dischargeInfo.dischargeOrderDate,  
-            dischargeOrderTime: dischargeInfo.dischargeOrderTime,  
+            dischargeOrderDate: dischargeInfo.dischargeOrderDate,
+            dischargeOrderTime: dischargeInfo.dischargeOrderTime,
             dischargeDate: await this.outcomePage.getDischargeDate(),
-            dischargeTime: await this.outcomePage.getDischargeTime(),            
+            dischargeTime: await this.outcomePage.getDischargeTime(),
             icuDay: await this.outcomePage.getIcuDays(),
             ventilatorDays: await this.outcomePage.getVentilatorDays(),
             dischargedTo: await this.outcomePage.getDischargedTo(),
             dischargeStatus: await this.outcomePage.getDischargeStatus(),
             dischargeStatusDescription: await this.outcomePage.getDischargeStatusDescription(),
-            ImpedimentsToDischargeCode: await this.outcomePage.getImpedimentsToDischargeCode(),
-            ImpedimentsToDischargeDescription: await this.outcomePage.getImpedimentsToDischargeDescription()
         };
+
+        if (process.env.ENV === 'sd_uat') {
+            actualDischargeInfo.ImpedimentsToDischargeCode = await this.outcomePage.getImpedimentsToDischargeCode();
+            actualDischargeInfo.ImpedimentsToDischargeDescription = await this.outcomePage.getImpedimentsToDischargeDescription();
+        }
         expect(actualDischargeInfo).toEqual(dischargeInfo);
 
         // Billing
         await this.outcomePage.clickOnTabFromNavbar(OutcomeTab.Billing);
-        const actualBilling: Billing = { 
-            primaryPayor: await this.outcomePage.getPrimaryPayor() 
+        const actualBilling: Billing = {
+            primaryPayor: await this.outcomePage.getPrimaryPayor()
         };
         expect(actualBilling).toEqual(billing);
     }

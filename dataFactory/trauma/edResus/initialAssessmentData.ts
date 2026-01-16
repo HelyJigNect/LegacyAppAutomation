@@ -1,5 +1,5 @@
-import { faker } from "@faker-js/faker"
-import { InitialAssessment, Vitals } from "../../../dataObjects/trauma/edResus/initialAssessment"
+import { faker } from "@faker-js/faker";
+import { InitialAssessment, Vitals } from "../../../dataObjects/trauma/edResus/initialAssessment";
 
 export class InitialAssessmentData {
 
@@ -20,7 +20,7 @@ export class InitialAssessmentData {
     }
 
     static getVitalsData(): Vitals {
-        return {
+        let vitalsData: Vitals = {
             sbp: (faker.number.int({ min: 50, max: 120 })).toString(),
             dbp: (faker.number.int({ min: 50, max: 120 })).toString(),
             pulseRate: (faker.number.int({ min: 50, max: 120 })).toString(),
@@ -30,8 +30,13 @@ export class InitialAssessmentData {
             eye: "Opens Eyes Spontaneously",
             verbal: "Oriented (Pediatric (<= 2yrs): Smiles, Oriented to Sounds, Follows Objects, Interacts)",
             motor: "Localizing Pain",
-            warmingMeasuresCode: "0",
-            warmingMeasuresDescription: "No Warming Measures"
         }
+
+        if (process.env.ENV === 'sd_uat') {
+            vitalsData.warmingMeasuresCode = "0";
+            vitalsData.warmingMeasuresDescription = "No Warming Measures";
+        }
+
+        return vitalsData
     }
 }

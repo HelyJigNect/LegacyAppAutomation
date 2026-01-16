@@ -13,7 +13,7 @@ export class ArrivalData {
         to.setDate(from.getDate() + 2);
         const edDepartureDateObj = faker.date.between({ from, to });
 
-        return {
+        let arrivalData: Arrival = {
             primaryMedicalEvent: "Yes",
             edDepartureOrderDate: TsHelper.formatDate(edDepartureDateObj),
             edDepartureOrderTime: TsHelper.getRandomTime(0, 6),
@@ -23,12 +23,17 @@ export class ArrivalData {
             intubationPriorToArrival: "Not Applicable",
             postEdDisposition: "Operating Room",
             primaryTraumaServiceType: "Unknown",
-            modeOfArrivalCode: "1",
-            modeOfArrivalDescription: "Ground Ambulance",
-            responseLevelCode: "1",
-            responseLevelDescription: "Full",
-            responseActivationDate: TsHelper.formatDate(edDepartureDateObj),
-            responseActivationTime: TsHelper.getRandomTime(0, 6)
         }
+
+        if (process.env.ENV === 'sd_uat') {
+            arrivalData.modeOfArrivalCode = "1";
+            arrivalData.modeOfArrivalDescription = "Ground Ambulance";
+            arrivalData.responseLevelCode = "1";
+            arrivalData.responseLevelDescription = "Full";
+            arrivalData.responseActivationDate = TsHelper.formatDate(edDepartureDateObj);
+            arrivalData.responseActivationTime = TsHelper.getRandomTime(0, 6);
+        }
+
+        return arrivalData
     }
 }

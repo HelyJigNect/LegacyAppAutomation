@@ -1,8 +1,8 @@
 import { Page } from "@playwright/test";
-import { RegistriesPage } from "./registriesPage";
 import { Arrival } from "../../dataObjects/trauma/edResus/arrival";
 import { InitialAssessment, Vitals } from "../../dataObjects/trauma/edResus/initialAssessment";
 import { Alcohol } from "../../dataObjects/trauma/edResus/labsToxicology";
+import { RegistriesPage } from "./registriesPage";
 
 export class EdResusPage extends RegistriesPage {
     constructor(page: Page) {
@@ -71,10 +71,10 @@ export class EdResusPage extends RegistriesPage {
 
     //Locator of ED/Resus > Labs/Toxicology
     private alcoholUseIndicatorDropdown = `//di-code-and-description-field[@field-information-name="Trauma.AlcoholUseIndicator"]//div[@uib-dropdown]`
-    private optionOfAlcoholUseIndicatorDropdown =(optionValue: string) => `//ul[@di-append-to-body="Trauma.AlcoholUseIndicator"]//span[contains(text(),', ${optionValue}')]`
-    private clinicianAdministeredDropdown =`//di-code-and-description-field[@field-information-name="Trauma.EdDrugScreens.0.DrugCode"]//div[@uib-dropdown]`
-    private optionOFClinicianAdministeredDropdown =(optionValue: string) =>`//ul[@di-append-to-body="Trauma.EdDrugScreens.0.DrugCode"]//span[contains(text(),', ${optionValue}')]`
-    
+    private optionOfAlcoholUseIndicatorDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.AlcoholUseIndicator"]//span[contains(text(),', ${optionValue}')]`
+    private clinicianAdministeredDropdown = `//di-code-and-description-field[@field-information-name="Trauma.EdDrugScreens.0.DrugCode"]//div[@uib-dropdown]`
+    private optionOFClinicianAdministeredDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.EdDrugScreens.0.DrugCode"]//span[contains(text(),', ${optionValue}')]`
+
     async populateFieldOfArrivalForm(arrivalData: Arrival): Promise<void> {
         await this.scrollAndSelectDropdownOption(this.primaryMedicalEventDropdown, this.optionOfPrimaryMedicalEventDropdown(arrivalData.primaryMedicalEvent))
         await this.fillInput(this.edDepartureDateInput, arrivalData.edDepartureDate)
@@ -82,17 +82,17 @@ export class EdResusPage extends RegistriesPage {
         await this.fillInput(this.edDepartureOrderDateInput, arrivalData.edDepartureOrderDate)
         await this.fillInput(this.edDepartureOrderTimeInput, arrivalData.edDepartureOrderTime)
         await this.scrollAndSelectDropdownOption(this.signsOfLifeDropdown, this.optionOfSignsOfLifeDropdown(arrivalData.signsOfLife))
-        await this.scrollAndSelectDropdownOption(this.intubationPriorToArrivalDropdown, this.optionOfIntubationPriorToArrivalDropdown(arrivalData.intubationPriorToArrival))        
-        await this.scrollAndSelectDropdownOption(this.primaryTraumaServiceTypeDropdown, this.optionOfPrimaryTraumaServiceTypeDropdown(arrivalData.primaryTraumaServiceType))
+        await this.scrollAndSelectDropdownOption(this.intubationPriorToArrivalDropdown, this.optionOfIntubationPriorToArrivalDropdown(arrivalData.intubationPriorToArrival))
         await this.scrollAndSelectDropdownOption(this.postEdDispositionDropdown, this.optionOfPostEdDispositionDropdown(arrivalData.postEdDisposition))
         switch (process.env.ENV) {
             case 'sd_uat':
-                await this.scrollAndSelectDropdownOption(this.modeOfArrivalDropdown, this.optionOfModeOfArrivalDropdown(arrivalData.modeOfArrivalDescription))
-                await this.scrollAndSelectDropdownOption(this.responseLevelTypeDropdown, this.optionOfResponseLevelDropdown(arrivalData.responseLevelDescription))
-                await this.fillInput(this.responseActivationDateInput, arrivalData.responseActivationDate)
-                await this.fillInput(this.responseActivationTimeInput, arrivalData.responseActivationTime)
+                await this.scrollAndSelectDropdownOption(this.modeOfArrivalDropdown, this.optionOfModeOfArrivalDropdown(arrivalData.modeOfArrivalDescription!))
+                await this.scrollAndSelectDropdownOption(this.responseLevelTypeDropdown, this.optionOfResponseLevelDropdown(arrivalData.responseLevelDescription!))
+                await this.fillInput(this.responseActivationDateInput, arrivalData.responseActivationDate!)
+                await this.fillInput(this.responseActivationTimeInput, arrivalData.responseActivationTime!)
                 break;
-        }    
+        }
+        await this.scrollAndSelectDropdownOption(this.primaryTraumaServiceTypeDropdown, this.optionOfPrimaryTraumaServiceTypeDropdown(arrivalData.primaryTraumaServiceType))
     }
 
     async populateFieldOfInitialAssessment(initialAssessmentData: InitialAssessment): Promise<void> {
@@ -107,7 +107,7 @@ export class EdResusPage extends RegistriesPage {
         await this.clickAndSelectCheckbox(this.intubatedCheckbox, initialAssessmentData.intubated)
         await this.clickAndSelectCheckbox(this.sedatedCheckbox, initialAssessmentData.sedated)
         await this.clickAndSelectCheckbox(this.respirationAssistedCheckbox, initialAssessmentData.respirationAssisted)
-        await this.clickAndSelectCheckbox(this.eyeObstructionCheckbox, initialAssessmentData.eyeObstruction) 
+        await this.clickAndSelectCheckbox(this.eyeObstructionCheckbox, initialAssessmentData.eyeObstruction)
     }
 
     async populateFieldOfVitalsForm(vitalsData: Vitals): Promise<void> {
@@ -119,20 +119,20 @@ export class EdResusPage extends RegistriesPage {
         await this.clickAndSelectCheckbox(this.supplementalO2Checkbox, vitalsData.supplementalO2, this.supplementalO2CheckboxValue)
         await this.scrollAndSelectDropdownOption(this.eyeDropdown, this.optionOfEyeDropdown(vitalsData.eye))
         await this.scrollAndSelectDropdownOption(this.verbalDropdown, this.optionOfVerbalDropdown(vitalsData.verbal))
-        await this.scrollAndSelectDropdownOption(this.motorDropdown, this.optionOfMotorDropdown(vitalsData.motor))   
+        await this.scrollAndSelectDropdownOption(this.motorDropdown, this.optionOfMotorDropdown(vitalsData.motor))
     }
 
     async populateFieldOfVitalsTab(vitalsData: Vitals): Promise<void> {
         switch (process.env.ENV) {
             case 'sd_uat':
-                await this.scrollAndSelectDropdownOption(this.warmingMeasuresDropdown, this.optionOfWarmingMeasuresDropdown(vitalsData.warmingMeasuresDescription))
+                await this.scrollAndSelectDropdownOption(this.warmingMeasuresDropdown, this.optionOfWarmingMeasuresDropdown(vitalsData.warmingMeasuresDescription!))
                 break;
         }
     }
 
     async populateFieldOfAlcoholForm(alcoholData: Alcohol): Promise<void> {
-        await this.scrollAndSelectDropdownOption(this.alcoholUseIndicatorDropdown,this.optionOfAlcoholUseIndicatorDropdown(alcoholData.alcoholUseIndicator))
-        await this.scrollAndSelectDropdownOption(this.clinicianAdministeredDropdown,this.optionOFClinicianAdministeredDropdown(alcoholData.clinicianAdministered))
+        await this.scrollAndSelectDropdownOption(this.alcoholUseIndicatorDropdown, this.optionOfAlcoholUseIndicatorDropdown(alcoholData.alcoholUseIndicator))
+        await this.scrollAndSelectDropdownOption(this.clinicianAdministeredDropdown, this.optionOFClinicianAdministeredDropdown(alcoholData.clinicianAdministered))
     }
 
     //getter methods
@@ -186,7 +186,8 @@ export class EdResusPage extends RegistriesPage {
     }
 
     async getPrimaryTraumaServiceType() {
-        return this.getValue('dropdown', 'PrimaryTraumaServiceTypeRow');
+        const field = process.env.ENV === 'dev' ? 'TertiaryExamRow' : 'PrimaryTraumaServiceTypeRow';
+        return this.getValue('dropdown', field);
     }
 
     async getWarmingMeasuresCode() {
@@ -251,7 +252,7 @@ export class EdResusPage extends RegistriesPage {
     }
 
     //vitals
-        // VITALS
+    // VITALS
     async getSbp() {
         return this.getValue('text', this.sbpInput);
     }

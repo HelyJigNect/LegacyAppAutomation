@@ -1,6 +1,6 @@
 import { expect, Page } from "@playwright/test";
-import { ProceduresPage } from "../../pages/registries/proceduresPage";
 import { DropDownOption } from "../../dataObjects/dropdownOption";
+import { ProceduresPage } from "../../pages/registries/proceduresPage";
 
 export class ProceduresPageAction {
 
@@ -30,6 +30,7 @@ export class ProceduresPageAction {
         for (const option of icd10OptionsHierarchy) {
             expect(await this.proceduresPage.isICD10DropDownOptionHierarchyFromAddMultipleProcedureSpeedScreenAsExpected(option)).toBeTruthy();
         }
+        await this.proceduresPage.clickOnButtonOfSpeedScreen('Procedures (Choose Up To 10)', 'OK');
     }
 
     async addICD10ProcedureUsingProceduresSpeedScreen(icd10Options: DropDownOption[]): Promise<void> {
@@ -51,6 +52,7 @@ export class ProceduresPageAction {
         for (const option of icd10OptionsHierarchy) {
             expect(await this.proceduresPage.isICD10DropDownOptionHierarchyFromProcedureSpeedScreenAsExpected(option)).toBeTruthy();
         }
+        await this.proceduresPage.clickOnButtonOfSpeedScreen('Procedures', 'OK');
     }
 
 }

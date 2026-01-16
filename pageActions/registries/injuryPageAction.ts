@@ -1,11 +1,11 @@
 import { expect, Page } from "@playwright/test";
-import { InjuryPage } from "../../pages/registries/injuryPage";
-import { InjuryInformation } from "../../dataObjects/trauma/injury/injuryInformation";
-import { InjuryTypeOptions, MechanismOfInjury } from "../../dataObjects/trauma/injury/mechanismOfInjury";
 import { InjuryInformationMandatoryField } from "../../data/enum/injury/injuryInformation";
 import { ECodesMandatoryField } from "../../data/enum/injury/mechanismOfInjury";
 import { InjuryTab } from "../../data/enum/tabNames";
 import { DropDownOption } from "../../dataObjects/dropdownOption";
+import { InjuryInformation } from "../../dataObjects/trauma/injury/injuryInformation";
+import { MechanismOfInjury } from "../../dataObjects/trauma/injury/mechanismOfInjury";
+import { InjuryPage } from "../../pages/registries/injuryPage";
 
 export class InjuryPageAction {
 
@@ -44,15 +44,16 @@ export class InjuryPageAction {
         await this.injuryPage.clickOnTabFromNavbar(InjuryTab.MechanismOfInjury);
         const actualECodes: MechanismOfInjury = {
             primaryICD10Mechanism: await this.injuryPage.getPrimaryICD10Mechanism(),
-            // secondaryICD10Mechanism: await this.injuryPage.getSecondaryICD10Mechanism(),
-            // tertiaryICD10Mechanism: await this.injuryPage.getTertiaryICD10Mechanism(),
             injuryTypeCode: await this.injuryPage.getInjuryTypeCode(),
             injuryTypeDescription: await this.injuryPage.getInjuryTypeDescription(),
-            injuryMechanismCode: await this.injuryPage.getInjuryMechanismCode(),
-            injuryMechanismDescription: await this.injuryPage.getInjuryMechanismDescription(),
-            disasterCasualtyCode: await this.injuryPage.getDisasterCasualtyCode(),
-            disasterCasualtyDescription: await this.injuryPage.getDisasterCasualtyDescription()
         };
+
+        if (process.env.ENV === 'sd_uat') {
+            actualECodes.injuryMechanismCode = await this.injuryPage.getInjuryMechanismCode();
+            actualECodes.injuryMechanismDescription = await this.injuryPage.getInjuryMechanismDescription();
+            actualECodes.disasterCasualtyCode = await this.injuryPage.getDisasterCasualtyCode();
+            actualECodes.disasterCasualtyDescription = await this.injuryPage.getDisasterCasualtyDescription();
+        }
         expect(actualECodes).toEqual(eCodes);
     }
 

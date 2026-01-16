@@ -1,19 +1,19 @@
-import { test } from '../fixtures/fixtures';
-import { RecordInfoData } from '../dataFactory/trauma/demographic/recordInfoData';
-import { TraumaData } from '../dataFactory/trauma/traumaData';
 import { PatientData } from '../dataFactory/trauma/demographic/patientData';
-import { MechanismOfInjuryData } from '../dataFactory/trauma/injury/mechanismOfInjuryData';
-import { SceneTransportData } from '../dataFactory/trauma/prehospital/sceneTransportData';
-import { ReferralHistoryData } from '../dataFactory/trauma/referringFacility/referralHistoryData';
-import { InitialDischargeData } from '../dataFactory/trauma/outcome/initialDischargeData';
-import { BillingData } from '../dataFactory/trauma/outcome/billingData';
+import { RecordInfoData } from '../dataFactory/trauma/demographic/recordInfoData';
 import { ComorbiditiesData } from '../dataFactory/trauma/diagnosis/comorbiditiesData';
+import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
 import { ArrivalData } from '../dataFactory/trauma/edResus/arrivalData';
 import { InitialAssessmentData } from '../dataFactory/trauma/edResus/initialAssessmentData';
 import { LabsToxicologyData } from '../dataFactory/trauma/edResus/labsToxicologyData';
-import { InjuryCodingData } from '../dataFactory/trauma/diagnosis/injuryCodingData';
-import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locationServiceData';
 import { InjuryInfoData } from '../dataFactory/trauma/injury/injuryInfoData';
+import { MechanismOfInjuryData } from '../dataFactory/trauma/injury/mechanismOfInjuryData';
+import { BillingData } from '../dataFactory/trauma/outcome/billingData';
+import { InitialDischargeData } from '../dataFactory/trauma/outcome/initialDischargeData';
+import { LocationServiceData } from '../dataFactory/trauma/patientTracking/locationServiceData';
+import { SceneTransportData } from '../dataFactory/trauma/prehospital/sceneTransportData';
+import { ReferralHistoryData } from '../dataFactory/trauma/referringFacility/referralHistoryData';
+import { TraumaData } from '../dataFactory/trauma/traumaData';
+import { test } from '../fixtures/fixtures';
 
 const fullRecordCreation_LastName = "Test create record 1"
 test.describe('Create record', () => {

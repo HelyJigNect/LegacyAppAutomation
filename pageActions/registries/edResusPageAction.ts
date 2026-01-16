@@ -1,13 +1,12 @@
 import { expect, Page } from "@playwright/test";
-import { EdResusPage } from "../../pages/registries/edResusPage";
-import { InitialAssessment, Vitals } from "../../dataObjects/trauma/edResus/initialAssessment";
-import { Arrival } from "../../dataObjects/trauma/edResus/arrival";
-import { Alcohol } from "../../dataObjects/trauma/edResus/labsToxicology";
 import { ArrivalInformationMandatoryFields } from "../../data/enum/edResus/arrival";
-import { InitialAssessmentMandatoryField } from "../../data/enum/edResus/initialAssessment";
-import { VitalsMandatoryField } from "../../data/enum/edResus/initialAssessment";
+import { InitialAssessmentMandatoryField, VitalsMandatoryField } from "../../data/enum/edResus/initialAssessment";
 import { AlcoholMandatoryField } from "../../data/enum/edResus/labsToxicology";
 import { EdResusTab } from "../../data/enum/tabNames";
+import { Arrival } from "../../dataObjects/trauma/edResus/arrival";
+import { InitialAssessment, Vitals } from "../../dataObjects/trauma/edResus/initialAssessment";
+import { Alcohol } from "../../dataObjects/trauma/edResus/labsToxicology";
+import { EdResusPage } from "../../pages/registries/edResusPage";
 
 export class EdResusPageAction {
 
@@ -55,13 +54,16 @@ export class EdResusPageAction {
             intubationPriorToArrival: await this.edResusPage.getIntubationPriorToArrival(),
             postEdDisposition: await this.edResusPage.getPostEdDisposition(),
             primaryTraumaServiceType: await this.edResusPage.getPrimaryTraumaServiceType(),
-            modeOfArrivalCode: await this.edResusPage.getModeOfArrivalCode(),
-            modeOfArrivalDescription: await this.edResusPage.getModeOfArrivalDescription(),
-            responseLevelCode: await this.edResusPage.getResponseLevelCode(),
-            responseLevelDescription: await this.edResusPage.getResponseLevelDescription(),
-            responseActivationDate: await this.edResusPage.getResponseActivationDate(),
-            responseActivationTime: await this.edResusPage.getResponseActivationTime()
         };
+
+        if (process.env.ENV === 'sd_uat') {
+            actualArrival.modeOfArrivalCode = await this.edResusPage.getModeOfArrivalCode();
+            actualArrival.modeOfArrivalDescription = await this.edResusPage.getModeOfArrivalDescription();
+            actualArrival.responseLevelCode = await this.edResusPage.getResponseLevelCode();
+            actualArrival.responseLevelDescription = await this.edResusPage.getResponseLevelDescription();
+            actualArrival.responseActivationDate = await this.edResusPage.getResponseActivationDate();
+            actualArrival.responseActivationTime = await this.edResusPage.getResponseActivationTime();
+        }
         expect(actualArrival).toEqual(arrivalData);
 
         // ---------------------- INITIAL ASSESSMENT ----------------------
@@ -82,6 +84,7 @@ export class EdResusPageAction {
         expect(actualInitialAssessment).toEqual(initialAssessment);
 
         // ---------------------- VITALS ----------------------
+        await this.edResusPage.clickOnTabFromNavbar(EdResusTab.Vitals);
         const actualVitals: Vitals = {
             sbp: await this.edResusPage.getSbp(),
             dbp: await this.edResusPage.getDbp(),
@@ -92,12 +95,12 @@ export class EdResusPageAction {
             eye: await this.edResusPage.getGcsEye(),
             verbal: await this.edResusPage.getGcsVerbal(),
             motor: await this.edResusPage.getGcsMotor(),
-            warmingMeasuresCode: '',
-            warmingMeasuresDescription: ''
         };
-        await this.edResusPage.clickOnTabFromNavbar(EdResusTab.Vitals);
-        actualVitals.warmingMeasuresCode = await this.edResusPage.getWarmingMeasuresCode(),
-            actualVitals.warmingMeasuresDescription = await this.edResusPage.getWarmingMeasuresDescription()
+
+        if (process.env.ENV === 'sd_uat') {
+            actualVitals.warmingMeasuresCode = await this.edResusPage.getWarmingMeasuresCode();
+            actualVitals.warmingMeasuresDescription = await this.edResusPage.getWarmingMeasuresDescription();
+        }
         expect(actualVitals).toEqual(vitals);
 
         // ---------------------- LABS / ALCOHOL ----------------------
@@ -118,4 +121,3 @@ export class EdResusPageAction {
         expect(await this.edResusPage.verifyFieldValidationIsNotPresent(availableFieldValidation, AlcoholMandatoryField)).toBeTruthy();
     }
 }
-

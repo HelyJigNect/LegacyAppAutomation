@@ -1,14 +1,12 @@
 import { Page } from "@playwright/test";
-import { RegistriesPage } from "../../pages/registries/registriesPage";
-import { DemographicPage } from "../../pages/registries/demographicPage";
-import { Identifiers } from "../../dataObjects/trauma/demographic/recordInfo";
-import { PatientAddressInfo, PatientInfo, RaceOptions } from "../../dataObjects/trauma/demographic/patient";
-import { expect } from "../../fixtures/fixtures";
+import { PatientAddressInformationMandatoryField, PatientInformationMandatoryField } from "../../data/enum/demographic/patient";
 import { IdentifiersMandatoryField } from "../../data/enum/demographic/recordInfo";
-import { PatientInformationMandatoryField } from "../../data/enum/demographic/patient";
-import { PatientAddressInformationMandatoryField } from "../../data/enum/demographic/patient";
 import { DemographicTab } from "../../data/enum/tabNames";
-import { el } from "@faker-js/faker/.";
+import { PatientAddressInfo, PatientInfo, RaceOptions } from "../../dataObjects/trauma/demographic/patient";
+import { Identifiers } from "../../dataObjects/trauma/demographic/recordInfo";
+import { expect } from "../../fixtures/fixtures";
+import { DemographicPage } from "../../pages/registries/demographicPage";
+import { RegistriesPage } from "../../pages/registries/registriesPage";
 
 
 export class DemographicPageAction {
@@ -42,7 +40,7 @@ export class DemographicPageAction {
         if (process.env.ENV === 'dev') {
             return;
         }
-        
+
         //Verify Race options
         await this.demographicPage.clickOnRaceButtonOfPatientInformationForm();
         expect(await this.demographicPage.isSpeedScreenDisplayed(DemographicTab.Race), 'Race speed screen is not displayed').toBeTruthy();
@@ -119,12 +117,14 @@ export class DemographicPageAction {
             raceDescription: await this.demographicPage.getRaceDescription(patientInfo.race!),
             ssn: await this.demographicPage.getSSN(),
         };
-        if(process.env.ENV === 'sd_uat'){
+
+        if (process.env.ENV === 'sd_uat') {
             actualPatientInfo.genderId = await this.demographicPage.getDropdownSelectedText('GenderIdentity')
         }
         else {
             actualPatientInfo.genderId = await this.demographicPage.getDropdownSelectedText('GenderIdentityRow')
         }
+
         expect(actualPatientInfo).toEqual(patientInfo);
 
         const actualAddress: PatientAddressInfo = {

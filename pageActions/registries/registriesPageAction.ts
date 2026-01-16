@@ -1,24 +1,22 @@
 import { expect, Page } from "@playwright/test";
-import { RegistriesPage } from "../../pages/registries/registriesPage";
-import { HomePage } from "../../pages/homePage";
-import { Trauma } from "../../dataObjects/trauma/trauma";
-import { TsHelper } from "../../utils/tsHelper";
 import { Identifiers } from "../../dataObjects/trauma/demographic/recordInfo";
 import { DischargeInformation } from "../../dataObjects/trauma/outcome/initialDischarge";
-       
+import { Trauma } from "../../dataObjects/trauma/trauma";
+import { HomePage } from "../../pages/homePage";
+import { RegistriesPage } from "../../pages/registries/registriesPage";
+import { TsHelper } from "../../utils/tsHelper";
+
+import { PatientAddressInformationMandatoryField, PatientInformationMandatoryField } from "../../data/enum/demographic/patient";
 import { IdentifiersMandatoryField } from "../../data/enum/demographic/recordInfo";
-import { PatientInformationMandatoryField } from "../../data/enum/demographic/patient";
-import { PatientAddressInformationMandatoryField } from "../../data/enum/demographic/patient";
+import { ComorbiditiesMandatoryField } from "../../data/enum/diagnosis/comorbidities";
+import { ArrivalInformationMandatoryFields } from "../../data/enum/edResus/arrival";
+import { InitialAssessmentMandatoryField, VitalsMandatoryField } from "../../data/enum/edResus/initialAssessment";
+import { AlcoholMandatoryField } from "../../data/enum/edResus/labsToxicology";
 import { ECodesMandatoryField } from "../../data/enum/injury/mechanismOfInjury";
+import { BillingMandatoryField } from "../../data/enum/outcome/billing";
+import { DischargeInformationMandatoryField } from "../../data/enum/outcome/initialDischarge";
 import { PrehospitalInformationMandatoryField } from "../../data/enum/prehospital/sceneTransport";
 import { ImmediateReferringFacilityMandatoryField } from "../../data/enum/referringFacility/referralHistory";
-import { ArrivalInformationMandatoryFields } from "../../data/enum/edResus/arrival";
-import { InitialAssessmentMandatoryField } from "../../data/enum/edResus/initialAssessment";
-import { AlcoholMandatoryField } from "../../data/enum/edResus/labsToxicology";
-import { VitalsMandatoryField } from "../../data/enum/edResus/initialAssessment";
-import { ComorbiditiesMandatoryField } from "../../data/enum/diagnosis/comorbidities";
-import { DischargeInformationMandatoryField } from "../../data/enum/outcome/initialDischarge";
-import { BillingMandatoryField } from "../../data/enum/outcome/billing";
 
 export class RegistriesPageAction {
 
@@ -79,18 +77,26 @@ export class RegistriesPageAction {
     }
 
     async verifyInitialMandatoryFields(availableFieldValidation: { field: string; message: string }[]) {
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, IdentifiersMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientInformationMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientAddressInformationMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ECodesMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PrehospitalInformationMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ImmediateReferringFacilityMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ArrivalInformationMandatoryFields)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, InitialAssessmentMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, VitalsMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, AlcoholMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ComorbiditiesMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, DischargeInformationMandatoryField)).toBeTruthy();
-        expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, BillingMandatoryField)).toBeTruthy();
+        switch (process.env.ENV) {
+            case 'dev':
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientInformationMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ArrivalInformationMandatoryFields)).toBeTruthy();
+                break;
+            default:
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, IdentifiersMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientInformationMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PatientAddressInformationMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ECodesMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, PrehospitalInformationMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ImmediateReferringFacilityMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ArrivalInformationMandatoryFields)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, InitialAssessmentMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, VitalsMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, AlcoholMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, ComorbiditiesMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, DischargeInformationMandatoryField)).toBeTruthy();
+                expect(await this.registriesPage.verifyFieldValidationIsPresent(availableFieldValidation, BillingMandatoryField)).toBeTruthy();
+                break;
+        }
     }
 }

@@ -10,17 +10,20 @@ export class MechanismOfInjuryData {
         const randomInjuryType = injuryTypes[Math.floor(Math.random() * injuryTypes.length)];
         const randomInjuryMechanism = injuryMechanism[Math.floor(Math.random() * injuryMechanism.length)];
         const randomDisasterCasualty = disasterCasualty[Math.floor(Math.random() * disasterCasualty.length)];
-        return {
+        const eCodesData: MechanismOfInjury = {
             primaryICD10Mechanism: "Unknown",
-            // secondaryICD10Mechanism: "Unknown",
-            // tertiaryICD10Mechanism: "Unknown",
             injuryTypeCode: randomInjuryType.code,
             injuryTypeDescription: randomInjuryType.description,
-            injuryMechanismCode: randomInjuryMechanism.code,
-            injuryMechanismDescription: randomInjuryMechanism.description,
-            disasterCasualtyCode: randomDisasterCasualty.code,
-            disasterCasualtyDescription: randomDisasterCasualty.description,
         }
+
+        if (process.env.ENV === 'sd_uat') {
+            eCodesData.injuryMechanismCode = randomInjuryMechanism.code;
+            eCodesData.injuryMechanismDescription = randomInjuryMechanism.description;
+            eCodesData.disasterCasualtyCode = randomDisasterCasualty.code;
+            eCodesData.disasterCasualtyDescription = randomDisasterCasualty.description;
+        }
+
+        return eCodesData;
     }
 
     static getInjuryTypeOption(): InjuryTypeOptions[] {

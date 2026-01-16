@@ -27,7 +27,7 @@ export class InitialDischargeData {
                 break;
         }
 
-        return {
+        const dischargeInfoData: DischargeInformation = {
             dischargeOrderDate: TsHelper.formatDate(dischargeDateObj),
             dischargeOrderTime: TsHelper.getRandomTime(13, 18),
             dischargeDate: TsHelper.formatDate(dischargeDateObj),
@@ -35,8 +35,13 @@ export class InitialDischargeData {
             dischargeStatus: '1',
             dischargeStatusDescription: 'Alive',
             dischargedTo,
-            ImpedimentsToDischargeCode: '0',
-            ImpedimentsToDischargeDescription: 'None'
         };
+
+        if (process.env.ENV === 'sd_uat') {
+            dischargeInfoData.ImpedimentsToDischargeCode = '0';
+            dischargeInfoData.ImpedimentsToDischargeDescription = 'None';
+
+        }
+        return dischargeInfoData;
     }
 }

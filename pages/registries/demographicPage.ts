@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
+import { PatientAddressInfo, PatientInfo, RaceOptions } from "../../dataObjects/trauma/demographic/patient";
 import { Identifiers } from "../../dataObjects/trauma/demographic/recordInfo";
-import { PatientInfo, PatientAddressInfo, RaceOptions } from "../../dataObjects/trauma/demographic/patient";
 import { RegistriesPage } from "./registriesPage";
 
 export class DemographicPage extends RegistriesPage {
@@ -45,6 +45,7 @@ export class DemographicPage extends RegistriesPage {
     private stateDropdown = `//di-dropdown-field[@field-information-name="Trauma.PatientAddress.State"]`
     private countyDropdown = `//td[@field-information-name="Trauma.PatientAddress.FipsCounty"]//div[@uib-dropdown]`
     private countryDropdown = `//td[@field-information-name="Trauma.PatientAddress.CountryText"]//div[@uib-dropdown]`
+    private optionOfCountryDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.PatientAddress.CountryText"]//span[contains(text(),'${optionValue}')]`
     private alternateHomeResidenceDropdown = `//td[@field-information-name="Trauma.AlternateHomeResidence"]//div[@uib-dropdown]`
 
     async populateFieldOfIdentifiersForm(identifiersData: Identifiers): Promise<string> {
@@ -65,16 +66,12 @@ export class DemographicPage extends RegistriesPage {
         await this.selectDropDownOption(this.genderIdentityDropdown, this.optionOfGenderIdentityDropdown(patientInfo.genderId))
         await this.selectDropDownOption(this.ethnicityDropdown, this.optionOfEthnicityDropdown(patientInfo.ethnicity))
         await this.selectDropDownOption(this.genderAffirmingHormoneTherapyDropdown, this.optionOfGenderAffirmingHormoneTherapyDropdown(patientInfo.genderAHT))
-      
+
         switch (process.env.ENV) {
             case 'al_uat':
-                await this.fillInput(this.ssnInput, patientInfo.ssn)
-                break;
             case 'il_uat':
-                await this.fillInput(this.ssnInput, patientInfo.ssn)
-                break;
             case 'sd_uat':
-                await this.fillInput(this.ssnInput, patientInfo.ssn)
+                await this.fillInput(this.ssnInput, patientInfo.ssn);
                 break;
         }
 
@@ -84,6 +81,11 @@ export class DemographicPage extends RegistriesPage {
 
     async populateFieldOfPatientAddressInformationForm(patientAddressInfo: PatientAddressInfo): Promise<void> {
         await this.fillInput(this.zipInput, patientAddressInfo.zip)
+        if (process.env.ENV === 'dev') {
+            await this.clickElement(this.countryDropdown);
+            await this.clickElement(this.optionOfCountryDropdown('All Countries'));
+            await this.selectDropDownOption(this.countryDropdown, this.optionOfCountryDropdown(patientAddressInfo.country));
+        }
     };
 
     async clickOnRaceButtonOfPatientInformationForm(): Promise<void> {
@@ -238,5 +240,4 @@ export class DemographicPage extends RegistriesPage {
     async getAlternateResidence() {
         return this.getValue('dropdown', 'AlternateResidenceRow');
     }
-
 }

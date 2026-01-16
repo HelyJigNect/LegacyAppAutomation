@@ -26,6 +26,12 @@ switch (process.env.ENV) {
       { field: 'SSN', message: 'SSN should not be blank' }
     );
     break;
+  case 'dev':
+    PatientInformationMandatoryField = [{
+      field: 'Gender-Affirming Hormone Therapy',
+      message: 'Gender-Affirming Hormone Therapy should not be blank'
+    },];
+    break;
 }
 
 export const PatientAddressInformationMandatoryField: { field: string; message: string }[] = [
@@ -38,4 +44,4 @@ export const PatientAddressInformationMandatoryField: { field: string; message: 
     message: 'Patient Address Country should not be blank'
   }];
 
-export { PatientInformationMandatoryField }
+export { PatientInformationMandatoryField };

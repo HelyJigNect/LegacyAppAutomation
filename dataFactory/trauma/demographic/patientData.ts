@@ -1,5 +1,5 @@
-import { PatientAddressInfo, PatientInfo, RaceOptions } from "../../../dataObjects/trauma/demographic/patient"
 import { faker } from '@faker-js/faker';
+import { PatientAddressInfo, PatientInfo, RaceOptions } from "../../../dataObjects/trauma/demographic/patient";
 
 export class PatientData {
 
@@ -8,7 +8,7 @@ export class PatientData {
         const dobDate = faker.date.birthdate({ min: 10, max: 50, mode: 'age' });
         const dob = [String(dobDate.getMonth() + 1).padStart(2, '0'), String(dobDate.getDate()).padStart(2, '0'), dobDate.getFullYear(),].join('/');
 
-        return {
+        const patientData: PatientInfo = {
             dob,
             gender,
             genderId: `${gender} (The Patient Identifies as ${gender})`,
@@ -18,6 +18,12 @@ export class PatientData {
             raceDescription: 'American Indian',
             ssn: faker.helpers.replaceSymbols('###-##-####')
         }
+
+        if (process.env.ENV === 'dev') {
+            patientData.ssn = '';
+        }
+
+        return patientData;
     }
 
     static getPatientAddressData(): PatientAddressInfo {

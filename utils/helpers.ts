@@ -122,7 +122,10 @@ export class Helpers {
                 throw new Error(`Sub-Option not found in dropdown`);
             }
         }
-        // await this.clickElement(dropdownSelector);
+
+        if ((await this.isElementVisible(`${dropdownSelector}/ancestor::td/..//label`, 1000))) {
+            await this.clickElement(`${dropdownSelector}/ancestor::td/..//label`, true);
+        }
     }
 
     async scrollAndSelectDropdownOption(dropdownSelector: string, optionTextSelector: string, scrollStep: number = 100, maxScroll: number = 5000): Promise<void> {
@@ -165,6 +168,10 @@ export class Helpers {
             await optionLocator.click();
         } else {
             throw new Error(`Option not found in dropdown after scrolling: ${optionTextSelector}`);
+        }
+
+        if ((await this.isElementVisible(`${dropdownSelector}/ancestor::td/..//label`, 1000))) {
+            await this.clickElement(`${dropdownSelector}/ancestor::td/..//label`, true);
         }
     }
 

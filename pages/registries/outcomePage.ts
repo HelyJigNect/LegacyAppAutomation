@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
-import { DischargeInformation } from "../../dataObjects/trauma/outcome/initialDischarge";
 import { Billing } from "../../dataObjects/trauma/outcome/billing";
+import { DischargeInformation } from "../../dataObjects/trauma/outcome/initialDischarge";
 import { RegistriesPage } from "./registriesPage";
 
 export class OutcomePage extends RegistriesPage {
@@ -9,7 +9,8 @@ export class OutcomePage extends RegistriesPage {
     }
 
     //Locators of the Discharge Information form
-    private dischargeStatusInput = `//label[contains(normalize-space(.), 'Discharge Status')]//ancestor::tr//input[contains(@class,'dropdown')]`;
+    private dischargeStatusDropdown = `//label[contains(normalize-space(.), 'Discharge Status')]//ancestor::tr//input[contains(@class,'dropdown')]`;
+    private optionOfDischargeStatusDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.DischargeStatus"]//span[contains(text(),', ${optionValue}')]`;
     private dischargeStatusDescriptionInput = `//label[contains(normalize-space(.), 'Discharge Status')]//ancestor::tr//input[not(contains(@class,'dropdown'))]`;
     private dischargeDateInput = `//di-date-input[@field-information-name="Trauma.DischargeDate"]//input`
     private dischargeTimeInput = `//di-time-input[@field-information-name="Trauma.DischargeTime"]//input`
@@ -23,7 +24,7 @@ export class OutcomePage extends RegistriesPage {
     private impedimentsToDischargeDropdown = `//di-code-and-description-field[@field-information-name="Trauma.DischargeImpediments.0.Code"]//div[@auto-close="disabled"]//input`
     private impedimentsToDischargeDescriptionInput = `//di-code-and-description-field[@field-information-name="Trauma.DischargeImpediments.0.Code"]//div[@auto-close="disabled"]//input`
     private optionOfImpedimentsToDischargeDropdown = (optionValue: string) => `//ul[@di-append-to-body="Trauma.DischargeImpediments.0.Code"]//span[contains(text(),', ${optionValue}')]`
-    
+
 
     //Locators of the Billing form
     private primaryPayorDropdown = `//di-code-and-description-field[@field-information-name="Trauma.Payors.0.Code"]//div[@uib-dropdown]`
@@ -38,19 +39,16 @@ export class OutcomePage extends RegistriesPage {
         const hospitalDay = await this.getElementText(this.hospitalDaysInput)
         await this.fillInput(this.icuDaysInput, hospitalDay)
         await this.fillInput(this.ventilatorDaysInput, hospitalDay)
-        await this.clickElement(this.dischargeStatusInput);
-        await this.typeUsingKeyboard(dischargeInfoData.dischargeStatus);
-        await this.page.waitForTimeout(1000);
-        await this.page.keyboard.press('Escape');
+        await this.scrollAndSelectDropdownOption(this.dischargeStatusDropdown, this.optionOfDischargeStatusDropdown(dischargeInfoData.dischargeStatusDescription))
         await this.scrollAndSelectDropdownOption(this.dischargedToDropdown, this.optionOfDischargedToDropdown(dischargeInfoData.dischargedTo))
         switch (process.env.ENV) {
             case 'sd_uat':
-                await this.scrollAndSelectDropdownOption(this.impedimentsToDischargeDropdown, this.optionOfImpedimentsToDischargeDropdown(dischargeInfoData.ImpedimentsToDischargeDescription))
+                await this.scrollAndSelectDropdownOption(this.impedimentsToDischargeDropdown, this.optionOfImpedimentsToDischargeDropdown(dischargeInfoData.ImpedimentsToDischargeDescription!))
                 break;
         }
         return hospitalDay;
     }
-    
+
     async populateFieldOfBillingForm(billingData: Billing) {
         await this.scrollAndSelectDropdownOption(this.primaryPayorDropdown, this.optionOfPrimaryPayorDropdown(billingData.primaryPayor))
     }
@@ -86,7 +84,7 @@ export class OutcomePage extends RegistriesPage {
     }
 
     async getDischargeStatus() {
-        return this.getValue('text', this.dischargeStatusInput);
+        return this.getValue('text', this.dischargeStatusDropdown);
     }
 
     async getDischargeStatusDescription() {

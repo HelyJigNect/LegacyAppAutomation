@@ -1,4 +1,4 @@
-export const ArrivalInformationMandatoryFields: { field: string; message: string }[] = [
+let ArrivalInformationMandatoryFields: { field: string; message: string }[] = [
     {
         field: 'Primary Medical Event',
         message: 'Primary Medical Event should not be blank'
@@ -31,3 +31,23 @@ export const ArrivalInformationMandatoryFields: { field: string; message: string
         field: 'Post ED Disposition',
         message: 'Post ED Disposition should not be blank or unknown'
     }];
+
+switch (process.env.ENV) {
+    case 'dev':
+        ArrivalInformationMandatoryFields = [
+            {
+                field: 'Primary Medical Event',
+                message: 'Primary Medical Event should not be blank'
+            },
+            {
+                field: 'Intubation Prior To Arrival',
+                message: 'Intubation Prior To Arrival should not be blank'
+            },
+            {
+                field: 'Primary Trauma Service Type',
+                message: 'Primary Trauma Service Type should not be blank'
+            },
+        ]
+        break;
+}
+export { ArrivalInformationMandatoryFields };
